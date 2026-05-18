@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🚐 Vår Europaresa 2025 — Kållered → La Ràpita</title>
+<meta name="description" content="Familjens campervanresa genom Europa sommaren 2025." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root{
+    --sun:#FFB627; --sky:#3FA7FF; --sea:#00B8A9; --coral:#FF6B6B;
+    --berry:#9B5DE5; --grass:#7AC74F; --sand:#FFF6E5; --ink:#1F2A44;
+    --muted:#5B6477; --line:#E7EAF0; --card:#FFFFFF; --bg:#FFFAF0;
+    --r:18px; --shadow:0 8px 24px rgba(31,42,68,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;line-height:1.55}
+  h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:-.01em}
+  a{color:#1B6BD4;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 18px 80px}
+
+  .hero{background:radial-gradient(circle at 80% 10%, rgba(255,255,255,.6), transparent 40%),linear-gradient(135deg,#FF6B6B 0%, #FFB627 35%, #00B8A9 75%, #3FA7FF 100%);
+    color:#fff;border-radius:28px;padding:34px 28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .hero h1{font-size:clamp(28px,4.4vw,46px);line-height:1.05;margin-bottom:8px;text-shadow:0 2px 10px rgba(0,0,0,.15)}
+  .hero p{font-size:17px;opacity:.95;max-width:720px}
+  .hero .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{background:rgba(255,255,255,.22);backdrop-filter:blur(6px);padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+  .float{position:absolute;font-size:90px;opacity:.18;pointer-events:none}
+  .float.f1{top:-10px;right:20px;transform:rotate(-12deg)}
+  .float.f2{bottom:-20px;left:30px;font-size:80px;transform:rotate(8deg)}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:14px 0 6px;align-items:center}
+  .tbtn{background:#fff;border:1px solid var(--line);padding:8px 14px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .tbtn:hover{background:#FFF4E0}
+  .tbtn.on{background:#FFE2A8;border-color:#FFB627}
+  .syncdot{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-right:auto}
+  .syncdot .dot{width:10px;height:10px;border-radius:50%;background:#ccc;transition:.3s}
+  .syncdot.ok .dot{background:#7AC74F;box-shadow:0 0 8px #7AC74F}
+  .syncdot.err .dot{background:#FF6B6B}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 18px}
+  .tab{padding:10px 16px;border-radius:999px;background:#fff;border:1px solid var(--line);cursor:pointer;font-family:'Fredoka',sans-serif;font-size:14px;font-weight:500;color:var(--muted);transition:.15s}
+  .tab:hover{background:#FFF1D8}
+  .tab.active{background:linear-gradient(135deg,#FF6B6B,#FFB627);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(255,107,107,.3)}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--card);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);border:1px solid #F1F1F1}
+  .card.day{border-left:6px solid var(--sky);position:relative}
+  .card.day.custom{border-left-color:var(--berry);background:linear-gradient(180deg,#FFFAF0,#fff)}
+  .card.day.custom::before{content:"➕ Mellanstopp";position:absolute;top:-10px;right:14px;background:var(--berry);color:#fff;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:700}
+  .day-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .badge{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:12px;background:#EAF4FF;color:#1B6BD4}
+  .badge.warn{background:#FFF1D8;color:#A86700}
+  .badge.ok{background:#E4F8E2;color:#2D7A1F}
+  .badge.fun{background:#F1E4FF;color:#6A2DBB}
+  .day-title{font-family:'Fredoka',sans-serif;font-size:19px;font-weight:600}
+  .day-sub{color:var(--muted);font-size:14px;margin:2px 0 10px}
+  .label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:14px 0 6px}
+  .item{font-size:14.5px;padding:6px 0 6px 22px;position:relative}
+  .item::before{content:"✨";position:absolute;left:0;font-size:14px}
+  .day .item:nth-child(3n)::before{content:"🌟"}
+  .day .item:nth-child(3n+1)::before{content:"📍"}
+  .sleep{margin-top:12px;background:linear-gradient(135deg,#FFF6E5,#FFEAD0);padding:12px 14px;border-radius:14px;border:1px dashed #FFB627}
+  .sleep .t{font-size:12px;font-weight:700;color:#A86700;text-transform:uppercase;letter-spacing:.06em}
+  .sleep .n{font-weight:700;margin-top:2px}
+  .sleep .i{font-size:13px;color:var(--muted)}
+  .map{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:linear-gradient(135deg,#3FA7FF,#1B6BD4);color:#fff;padding:9px 16px;border-radius:999px;font-weight:700;font-size:13px;text-decoration:none;box-shadow:0 4px 10px rgba(63,167,255,.35)}
+  .map:hover{transform:translateY(-1px);text-decoration:none}
+  .tip{background:linear-gradient(135deg,#FFF1D8,#FFE2A8);padding:12px 16px;border-radius:14px;margin-top:12px;font-size:14px;color:#7A4F00;border-left:4px solid #FFB627}
+  .info{background:linear-gradient(135deg,#E1F2FF,#CFE7FF);padding:12px 16px;border-radius:14px;margin-top:12px;font-size:14px;color:#0F4C8A;border-left:4px solid #3FA7FF}
+
+  /* Editable destination row */
+  .dest{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 4px;font-size:14px}
+  .dest input{flex:1;min-width:140px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;background:#FFFEF8}
+  .dest input:focus{outline:none;border-color:var(--sun);background:#fff}
+  .dest .arrow{color:var(--muted);font-weight:700}
+
+  /* "Add" buttons for lists / mellanstopp */
+  .addrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .addrow input{flex:1;min-width:160px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px}
+  .addrow input:focus{outline:none;border-color:var(--sun)}
+  .addbtn{background:linear-gradient(135deg,#7AC74F,#2D7A1F);color:#fff;border:none;padding:8px 16px;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:13px}
+  .addbtn:hover{transform:translateY(-1px)}
+  .insertbtn{display:block;width:100%;margin:0 0 16px;padding:10px;background:#fff;border:2px dashed #9B5DE5;color:#6A2DBB;border-radius:14px;font-weight:700;cursor:pointer;font-family:inherit;font-size:13px;transition:.15s}
+  .insertbtn:hover{background:#F1E4FF}
+  .removebtn{position:absolute;top:10px;right:10px;background:#FFE4E4;color:#C0392B;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-weight:700;display:none}
+  .card.custom .removebtn,.check.custom .removebtn-inline,.game.custom .removebtn-inline{display:inline-flex;align-items:center;justify-content:center}
+  .removebtn-inline{background:transparent;border:none;color:#C0392B;cursor:pointer;font-size:16px;padding:0 4px;display:none}
+
+  .progress{height:10px;background:#F1F1F1;border-radius:999px;overflow:hidden;margin:8px 0 4px}
+  .progress > div{height:100%;background:linear-gradient(90deg,#7AC74F,#00B8A9);width:0%;transition:.3s}
+  .check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed #EFEFEF;font-size:14.5px;position:relative}
+  .check:last-child{border:none}
+  .check input[type=checkbox]{width:18px;height:18px;accent-color:#FF6B6B;margin-top:3px;cursor:pointer}
+  .check label{cursor:pointer;flex:1}
+  .check input:checked + label{text-decoration:line-through;color:#9AA0AC}
+
+  .game{background:#fff;border-radius:var(--r);padding:16px 18px;margin-bottom:12px;border:1px solid var(--line);position:relative;overflow:hidden}
+  .game.custom{border-color:#9B5DE5}
+  .game::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,182,39,.18),transparent 70%)}
+  .game .who{font-size:12px;font-weight:700;letter-spacing:.04em;color:#FF6B6B;margin-bottom:4px}
+  .game .name{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;margin-bottom:4px}
+  .game .d{color:var(--muted);font-size:14px}
+
+  /* COSTS */
+  .crow{display:grid;grid-template-columns:1fr 110px 130px;gap:8px;padding:8px 0;border-bottom:1px dashed #EFEFEF;font-size:14px;align-items:center}
+  .crow:last-child{border:none}
+  .crow .head{font-weight:700;font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .crow .est{font-weight:700;color:#1B6BD4;text-align:right}
+  .crow input.real{padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;text-align:right;background:#FFFEF8;width:100%}
+  .crow input.real:focus{outline:none;border-color:#7AC74F;background:#fff}
+  .totals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .totals .box{padding:14px 16px;border-radius:14px;font-weight:700}
+  .totals .est{background:linear-gradient(135deg,#CFE7FF,#A3D2FF);color:#0F4C8A}
+  .totals .real{background:linear-gradient(135deg,#D4F1C5,#7AC74F);color:#1F4A0E}
+  .totals .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+  .totals .val{font-size:22px;font-family:'Fredoka',sans-serif;margin-top:2px}
+
+  .notes{margin-top:14px;background:#FFFAF0;border:2px dashed #FFB627;border-radius:14px;padding:10px 14px;min-height:46px;font-size:14px;outline:none}
+  .notes:empty::before{content:"✏️ Klicka här i redigeringsläge för att lägga till egna anteckningar/tips/bilder för denna dag…";color:#B98A2D}
+
+  footer{margin-top:40px;text-align:center;color:var(--muted);font-size:13px}
+  .intro{font-size:16px;color:var(--muted);margin:0 0 14px}
+  h2.section{font-size:24px;margin-bottom:6px}
+  body.edit [contenteditable="true"]{background:#FFFCE0;outline:2px dashed #FFB627;border-radius:6px;padding:2px 4px}
+
+  /* LIVE MAP */
+  #livemap{height:520px;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .maplegend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;margin-top:10px;color:var(--muted)}
+  .maplegend span{display:inline-flex;align-items:center;gap:6px}
+  .maplegend .sw{width:14px;height:14px;border-radius:50%;display:inline-block}
+  .gpsbtn{background:linear-gradient(135deg,#FF6B6B,#FFB627);color:#fff;border:none;padding:10px 18px;border-radius:999px;font-weight:700;cursor:pointer;font-family:inherit;margin-right:8px}
+  .gpsbtn.on{background:linear-gradient(135deg,#7AC74F,#2D7A1F)}
+
+  @media(max-width:600px){
+    .wrap{padding:14px 10px 60px}
+    .hero{padding:26px 20px}
+    .card{padding:16px}
+    .crow{grid-template-columns:1fr 90px 100px}
+    #livemap{height:400px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+
+  <section class="hero">
+    <div class="float f1">🚐</div>
+    <div class="float f2">🏖️</div>
+    <h1>🚐 Vår stora Europaresa <br>Kållered → La Ràpita 🇪🇸</h1>
+    <p>13 juli – ca 7 augusti 2025 · En familjeäventyr med campervan, 100% offgrid, genom 7 länder, längs Medelhavet och hem genom Pyrenéerna. Klart för mamma, pappa &amp; 8-åringen ✨</p>
+    <div class="chips">
+      <span class="chip">🗺️ ~4 800 km</span>
+      <span class="chip">🌍 7 länder</span>
+      <span class="chip">⏳ 22 dagar</span>
+      <span class="chip">👨‍👩‍👧 3 personer</span>
+      <span class="chip">💶 ~3 300 €</span>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="syncdot" id="syncdot"><span class="dot"></span><span id="syncstate">Ansluter…</span></div>
+    <button class="tbtn" id="editBtn">✏️ Redigeringsläge</button>
+    <button class="tbtn" id="exportBtn">📥 Exportera HTML</button>
+    <button class="tbtn" id="resetBtn">↺ Återställ</button>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-p="ned">🚗 Ner-resan</button>
+    <button class="tab" data-p="stay">🏖️ La Ràpita</button>
+    <button class="tab" data-p="extra">☀️ Dag 9–13</button>
+    <button class="tab" data-p="hem">🏡 Hem-resan</button>
+    <button class="tab" data-p="livemap">🛰️ Live-karta</button>
+    <button class="tab" data-p="sleep">🌙 Sovplatser</button>
+    <button class="tab" data-p="pack">🎒 Packlista</button>
+    <button class="tab" data-p="mat">🍝 Mat i vanen</button>
+    <button class="tab" data-p="barn">🧒 Tips för 8-åringen</button>
+    <button class="tab" data-p="navig">🧭 Navigation</button>
+    <button class="tab" data-p="games">🎮 Lekar för vägen</button>
+    <button class="tab" data-p="costs">💶 Kostnader</button>
+  </div>
+
+  <!-- NER -->
+  <div class="panel active" id="p-ned">
+    <p class="intro">🛣️ Sverige → Danmark → Tyskland → Österrike → Italien → Frankrike → Spanien — längs Medelhavsrutan.<br><em>Tryck på "Redigeringsläge" för att ändra start/mål på en dag — Google Maps-länken uppdateras automatiskt. Använd <strong>➕ Lägg till mellanstopp</strong> för att skjuta in en ny dag.</em></p>
+    <div id="days-ned"></div>
+  </div>
+
+  <!-- STAY -->
+  <div class="panel" id="p-stay">
+    <h2 class="section">🏖️ La Ràpita — 21–25 juli</h2>
+    <p class="intro">Idyllisk fiskestad vid Ebrodeltans mynning — gratis parkering längs hamnen för campervans.</p>
+    <div class="card">
+      <div class="label">🌙 Sovplats</div>
+      <div class="item">P4N bekräftad: <strong>Hamnen i La Ràpita (Passeig Marítim)</strong> — gratis, toaletter vid stranden, mataffär 5 min bort</div>
+      <div class="item">Backup: <strong>Camping La Ràpita</strong> (dusch &amp; pool) ~25 €/natt</div>
+      <a class="map" href="https://www.google.com/maps/place/Sant+Carles+de+la+R%C3%A0pita,+Spain" target="_blank" rel="noopener">🗺️ Google Maps: La Ràpita</a>
+    </div>
+    <div class="card">
+      <div class="label">☀️ Aktiviteter</div>
+      <div class="item">🦩 <strong>Ebrodelta naturpark</strong> — flamingos, sköldpaddor, risfält. Cykla runt!</div>
+      <div class="item">🏖️ <strong>Playa de la Eucaliptus</strong> — en av Kataloniens finaste stränder, grund &amp; säker</div>
+      <div class="item">⛴️ <strong>Färjetur till Fangar-udden</strong> — liten lokal färja</div>
+      <div class="item">🦐 <strong>Fisk &amp; skaldjur</strong> direkt från hamnen — räkor, blåmusslor, paella</div>
+      <div class="item">🛶 <strong>Kayak i deltakanaler</strong> — hyrbar i hamn ~10–15 €/h</div>
+      <div class="item">🌅 <strong>Solnedgång vid Punta del Fangar</strong> — cykla eller gå</div>
+      <div class="item">🏰 <strong>Tortosa dagstrip</strong> — 30 min, medeltidsborg &amp; katedral</div>
+      <div class="tip">💡 Liten, lugn äkta spansk fiskestad utan turistmassor. Barn leker fritt vid hamnen, glass på varje hörn 🍦</div>
+      <div class="notes" data-note="stay-1"></div>
+    </div>
+  </div>
+
+  <!-- EXTRA dag 9-13 (oförändrad) -->
+  <div class="panel" id="p-extra">
+    <h2 class="section">☀️ Dag 9–13 — Förslag dagsprogram</h2>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 9 · 21 juli</span><span class="day-title">Ankomstdag 🛬</span></div>
+      <div class="item">Packa upp, handla på Mercadona/Consum</div>
+      <div class="item">Tapas-bar vid hamnen 🦐 + cerveza &amp; limonad för dottern</div>
+      <div class="item">🌅 Solnedgång från hamnpiren</div>
+      <div class="notes" data-note="extra-9"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 10 · 22 juli</span><span class="day-title">Stranddag 🏖️</span></div>
+      <div class="item">Playa de la Eucaliptus — 8 km öde sandstrand</div>
+      <div class="item">Sandslott, snäckor, snorkling</div>
+      <div class="item">Koka paella i vanen med färska musslor 🥘</div>
+      <div class="notes" data-note="extra-10"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 11 · 23 juli</span><span class="day-title">Ebrodelta 🦩</span></div>
+      <div class="item">Hyr cyklar (10–15 €/dag), cykla ut i deltat</div>
+      <div class="item">Flamingo-utsikt vid Laguna de la Tancada</div>
+      <div class="item">Lunch i Deltebre — menú del día</div>
+      <div class="notes" data-note="extra-11"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 12 · 24 juli</span><span class="day-title">Tortosa 🏰</span></div>
+      <div class="item">Castillo de la Suda — panorama över Ebro</div>
+      <div class="item">Katedral, gamla stan, glass</div>
+      <div class="notes" data-note="extra-12"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 13 · 25 juli</span><span class="day-title">Sista dagen vid havet 🌊</span></div>
+      <div class="item">Simma, glass, strandpromenad</div>
+      <div class="item">🏅 Diplom: "Jag har simmat i Medelhavet!"</div>
+      <div class="notes" data-note="extra-13"></div>
+    </div>
+  </div>
+
+  <!-- HEM -->
+  <div class="panel" id="p-hem">
+    <p class="intro">🏡 Hem via Pyrenéerna, södra Frankrike &amp; Belgien. Avresa 26 juli, hemma 2–3 augusti.</p>
+    <div id="days-hem"></div>
+  </div>
+
+  <!-- LIVE MAP -->
+  <div class="panel" id="p-livemap">
+    <h2 class="section">🛰️ Live-karta — hela rutten + er position</h2>
+    <p class="intro">Den planerade rutten visas i blått (ner-resa) och grönt (hem-resa). Tryck på "📍 Visa min position" för att se var ni är just nu — uppdateras live när ni kör.</p>
+    <div style="margin-bottom:10px">
+      <button class="gpsbtn" id="gpsBtn">📍 Visa min position</button>
+      <button class="tbtn" id="fitBtn">🔍 Visa hela rutten</button>
+    </div>
+    <div id="livemap"></div>
+    <div class="maplegend">
+      <span><span class="sw" style="background:#3FA7FF"></span> Ner-resa</span>
+      <span><span class="sw" style="background:#7AC74F"></span> Hem-resa</span>
+      <span><span class="sw" style="background:#FF6B6B"></span> Stopp</span>
+      <span><span class="sw" style="background:#9B5DE5"></span> Mellanstopp</span>
+      <span><span class="sw" style="background:#1F2A44"></span> Din GPS</span>
+    </div>
+    <div class="tip">💡 GPS fungerar bäst i mobilen. Om kartan inte uppdaterar, kontrollera att webbplatsen får använda platsen i webbläsarens inställningar. Nya/ändrade stopp visas automatiskt på kartan när platsen kan hittas i OpenStreetMap.</div>
+  </div>
+
+  <!-- SLEEP -->
+  <div class="panel" id="p-sleep">
+    <h2 class="section">🌙 Sovplatser — offgrid-strategi</h2>
+    <div class="card">
+      <div class="label">🔎 Hitta platser</div>
+      <div class="item"><strong>park4night.com</strong> — filtrera "gratis". Ladda ner offline!</div>
+      <div class="item"><strong>iOverlander</strong> — vildare platser</div>
+      <div class="item"><strong>Google Maps</strong> — sök "[stad] camper stellplatz"</div>
+    </div>
+    <div class="card">
+      <div class="label">🌡️ Varmt väder (juli)</div>
+      <div class="item">Parkera i skugga</div>
+      <div class="item">Insektsnät i fönstren</div>
+      <div class="item">Fyll vatten varje dag</div>
+      <div class="tip">💡 Solpaneler + litium-batteri klarar kyl + USB. 20 l reservdunk.</div>
+    </div>
+  </div>
+
+  <!-- PACK -->
+  <div class="panel" id="p-pack">
+    <h2 class="section">🎒 Interaktiv packlista</h2>
+    <p class="intro">Kryssa av — sparas automatiskt i molnet ✅ Du kan lägga till egna saker i varje kategori.</p>
+    <div class="card">
+      <div class="label">🎯 Framsteg</div>
+      <div class="progress"><div id="packfill"></div></div>
+      <div id="packcount" style="font-size:13px;color:var(--muted);margin-top:6px">0 / 0 packade</div>
+    </div>
+    <div class="card"><div class="label">🚐 Van &amp; teknik</div><div id="list-van"></div>
+      <div class="addrow"><input id="add-van" placeholder="✨ Lägg till en sak..." /><button class="addbtn" data-addlist="van">➕ Lägg till</button></div></div>
+    <div class="card"><div class="label">👕 Kläder</div><div id="list-klader"></div>
+      <div class="addrow"><input id="add-klader" placeholder="✨ Lägg till en sak..." /><button class="addbtn" data-addlist="klader">➕ Lägg till</button></div></div>
+    <div class="card"><div class="label">🍳 Kök &amp; mat</div><div id="list-kok"></div>
+      <div class="addrow"><input id="add-kok" placeholder="✨ Lägg till en sak..." /><button class="addbtn" data-addlist="kok">➕ Lägg till</button></div></div>
+    <div class="card"><div class="label">🧒 Barn-specifikt</div><div id="list-barn"></div>
+      <div class="addrow"><input id="add-barn" placeholder="✨ Lägg till en sak..." /><button class="addbtn" data-addlist="barn">➕ Lägg till</button></div></div>
+    <div class="card"><div class="label">🩹 Hälsa &amp; säkerhet</div><div id="list-halsa"></div>
+      <div class="addrow"><input id="add-halsa" placeholder="✨ Lägg till en sak..." /><button class="addbtn" data-addlist="halsa">➕ Lägg till</button></div></div>
+    <div class="card"><div class="label">📄 Dokument</div><div id="list-dok"></div>
+      <div class="addrow"><input id="add-dok" placeholder="✨ Lägg till en sak..." /><button class="addbtn" data-addlist="dok">➕ Lägg till</button></div></div>
+  </div>
+
+  <!-- MAT (oförändrad) -->
+  <div class="panel" id="p-mat">
+    <h2 class="section">🍝 Mat i campervanen</h2>
+    <div class="card">
+      <div class="label">🥫 Basvaror alltid ombord</div>
+      <div class="item">Pasta, ris, linser, konserverade tomater, kikärtor</div>
+      <div class="item">Olivolja, salt, peppar, vitlök, oregano, paprikapulver</div>
+      <div class="item">Knäckebröd &amp; müsli, UHT-mjölk, nötter</div>
+    </div>
+    <div class="card">
+      <div class="label">🍳 Enkla recept</div>
+      <div class="item">🍝 Pasta + tomatsås + parmesan</div>
+      <div class="item">🍚 Stekt ris med ägg, grönsaker &amp; soja</div>
+      <div class="item">🌮 Fisk-tacos med färsk fisk från La Ràpitas hamn</div>
+    </div>
+  </div>
+
+  <!-- BARN -->
+  <div class="panel" id="p-barn">
+    <h2 class="section">🧒 Tips för 8-åringen</h2>
+    <div class="card"><div class="label">🎈 Förberedelser</div><div id="list-barn-prep"></div>
+      <div class="addrow"><input id="add-barn-prep" placeholder="✨ Eget tips..." /><button class="addbtn" data-addtip="barn-prep">➕ Lägg till</button></div></div>
+    <div class="card"><div class="label">🚗 Långa körningar</div><div id="list-barn-drive"></div>
+      <div class="addrow"><input id="add-barn-drive" placeholder="✨ Eget tips..." /><button class="addbtn" data-addtip="barn-drive">➕ Lägg till</button></div></div>
+    <div class="card"><div class="label">📍 Barnvänliga stopp</div><div id="list-barn-stops"></div>
+      <div class="addrow"><input id="add-barn-stops" placeholder="✨ Eget tips..." /><button class="addbtn" data-addtip="barn-stops">➕ Lägg till</button></div></div>
+    <div class="card"><div class="label">🌞 Hålla glad i värmen</div><div id="list-barn-heat"></div>
+      <div class="addrow"><input id="add-barn-heat" placeholder="✨ Eget tips..." /><button class="addbtn" data-addtip="barn-heat">➕ Lägg till</button></div></div>
+  </div>
+
+  <!-- NAVIG -->
+  <div class="panel" id="p-navig">
+    <h2 class="section">🧭 Navigation &amp; praktisk info</h2>
+    <div class="card"><div class="label">📱 Appar</div>
+      <div class="item">Google Maps offline (DE, AT, IT, FR, ES)</div>
+      <div class="item">Park4Night Premium (~15 €/år)</div>
+      <div class="item">Waze, ViaMichelin, XE Currency</div>
+      <div class="item">Google Translate offline-paket DE/IT/FR/ES/CAT</div>
+    </div>
+    <div class="card"><div class="label">🆘 Nödnummer</div>
+      <div class="item">📞 112 — EU-nödnummer</div>
+      <div class="item">EHIC-kort (gröna EU-kortet)</div>
+    </div>
+  </div>
+
+  <!-- GAMES -->
+  <div class="panel" id="p-games">
+    <h2 class="section">🎮 Lekar &amp; aktiviteter för vägen</h2>
+    <div id="list-games"></div>
+    <div class="card">
+      <div class="label">➕ Lägg till egen lek</div>
+      <div class="addrow"><input id="add-game-name" placeholder="Namn på leken" style="flex:1;min-width:140px" /></div>
+      <div class="addrow"><input id="add-game-desc" placeholder="Beskrivning..." /><button class="addbtn" id="add-game-btn">➕ Lägg till lek</button></div>
+    </div>
+  </div>
+
+  <!-- COSTS -->
+  <div class="panel" id="p-costs">
+    <h2 class="section">💶 Kostnader — uppskattat vs verkligt</h2>
+    <p class="intro">Fyll i <strong>Verklig</strong>-rutan under resans gång så ser ni vad det faktiskt kostat. Summan uppdateras automatiskt.</p>
+
+    <div class="card">
+      <div class="label">🛣️ Tullar &amp; avgifter</div>
+      <div class="crow"><div class="head">Post</div><div class="head" style="text-align:right">Uppskattat</div><div class="head" style="text-align:right">Verkligt €</div></div>
+      <div id="costs-tull"></div>
+    </div>
+    <div class="card">
+      <div class="label">⛽ Bränsle</div>
+      <div id="costs-bransle"></div>
+    </div>
+    <div class="card">
+      <div class="label">🛏️ Sovplatser</div>
+      <div id="costs-sov"></div>
+    </div>
+    <div class="card">
+      <div class="label">🍽️ Mat &amp; upplevelser</div>
+      <div id="costs-mat"></div>
+    </div>
+    <div class="card">
+      <div class="label">➕ Egna kostnadsposter</div>
+      <div id="costs-egna"></div>
+      <div class="addrow">
+        <input id="cost-name" placeholder="Vad? (t.ex. souvenir)" />
+        <input id="cost-est" placeholder="Uppskattat €" type="number" style="max-width:120px" />
+        <button class="addbtn" id="cost-add">➕ Lägg till</button>
+      </div>
+    </div>
+
+    <div class="totals">
+      <div class="box est"><div class="lbl">Uppskattat totalt</div><div class="val" id="tot-est">0 €</div></div>
+      <div class="box real"><div class="lbl">Verkligt hittills</div><div class="val" id="tot-real">0 €</div></div>
+    </div>
+  </div>
+
+  <footer>Skapad med ❤️ för familjens Europaresa 2025 · Alla ändringar synkas automatiskt till molnet — familjen ser uppdateringar live.</footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module">
+/* =============== DATA =============== */
+// Default-dagar med koordinater (för Live-kartan). Användaren kan ändra titel + från/till — då försöker vi geocoda nya stopp via OpenStreetMap Nominatim.
+const DEFAULT_NED = [
+  {id:'ned-1', badge:'Dag 1 · 13 juli', title:'Kållered → Hamburg 🇩🇪', sub:'~460 km · 4,5 h · Via Malmö, Köpenhamn, Öresundsbron', from:'Kållered, Sweden', to:'Hamburg, Germany',
+    badges:'<span class="badge warn">Öresundsbron ~430 kr</span> <span class="badge fun">🌉 Stor bro!</span>',
+    items:['Stopp i Köpenhamn ~1 h — Nyhavn, Sjöjungfrun 🧜‍♀️','Hamburg: Speicherstadt &amp; Miniatur Wunderland 🚂'],
+    sleep:{n:'P4N: Raststätte Stillhorn / Elbe-Rastplatz Hamburg', i:'Gratis längs E45 söder om Hamburg'}},
+  {id:'ned-2', badge:'Dag 2 · 14 juli', title:'Hamburg → Rothenburg ob der Tauber 🏰', sub:'~470 km · 4,5 h · A7 söderut', from:'Hamburg, Germany', to:'Rothenburg ob der Tauber, Germany',
+    badges:'<span class="badge ok">Inga vägtullar i Tyskland</span>',
+    items:['En av Europas finaste medeltidsstäder — stadsmuren','Kriminalmuseum + Schneeball-kaka 🍪'],
+    sleep:{n:'Stellplatz Rothenburg', i:'6–10 € · strax utanför stadsmuren'}},
+  {id:'ned-3', badge:'Dag 3 · 15 juli', title:'Rothenburg → Innsbruck 🇦🇹', sub:'~320 km · 3,5 h · Via München', from:'Rothenburg ob der Tauber, Germany', to:'Innsbruck, Austria',
+    badges:'<span class="badge warn">Vinjett ~9,90 €</span> <span class="badge fun">⛰️ Alperna!</span>',
+    items:['Gyllene taket, Bergisel-hoppbacken','Alpenzoo — alpernas djur 🦊'],
+    sleep:{n:'P4N: Innsbruck Inn Ufer', i:'Gratis vid floden'}},
+  {id:'ned-4', badge:'Dag 4 · 16 juli', title:'Innsbruck → Gardasjön 🇮🇹', sub:'~210 km · 2,5 h · Brennerpasset', from:'Innsbruck, Austria', to:'Lazise, Italy',
+    badges:'<span class="badge warn">Brenner ~13 €</span> <span class="badge ok">Bad i sjön!</span>',
+    items:['Gardasjön — kristallklart vatten 💦','Lazise: söt medeltidshamn','Gardaland nöjespark 🎢'],
+    sleep:{n:'P4N: Punta Cornicello, Lazise', i:'Direkt vid sjön · nattvakt'}},
+  {id:'ned-5', badge:'Dag 5 · 17 juli', title:'Gardasjön → Cinque Terre / La Spezia 🌈', sub:'~320 km · 3,5 h', from:'Lazise, Italy', to:'La Spezia, Italy',
+    badges:'<span class="badge warn">Motorväg ~12–16 €</span> <span class="badge fun">Världsarv!</span>',
+    items:['5 färgglada byar på klipporna','Tåg mellan byarna (~4 €/barn)','Bad vid Monterosso'],
+    sleep:{n:'Area Sosta La Spezia', i:'P4N · 0–5 € · tåg till Cinque Terre'}},
+  {id:'ned-6', badge:'Dag 6 · 18 juli', title:'La Spezia → Monaco / Menton 🇲🇨', sub:'~210 km · 2,5 h · Rivieran', from:'La Spezia, Italy', to:'Menton, France',
+    badges:'<span class="badge warn">Tull ~10–15 €</span>',
+    items:['Monaco: F1-banan, Oceanografiska 🐠','Menton: citronstad','Bonus: Antibes/Cannes'],
+    sleep:{n:'Aire Camping-Car Menton Borrigo', i:'~5 € · vatten + el'}},
+  {id:'ned-7', badge:'Dag 7 · 19 juli', title:'Menton → norra Barcelona 🇪🇸', sub:'~500 km · 5 h', from:'Menton, France', to:'Premià de Mar, Spain',
+    badges:'<span class="badge warn">Franska tullen ~20–25 €</span> <span class="badge ok">AP-7 GRATIS!</span>',
+    items:['Perpignan (1 h)','Costa Brava: Cadaqués &amp; Begur'],
+    sleep:{n:'P4N: Premià de Mar', i:'Gratis · direkt vid havet'}},
+  {id:'ned-8', badge:'Dag 8 · 20 juli', title:'Barcelona → La Ràpita 🎉', sub:'~190 km · 2 h · AP-7', from:'Premià de Mar, Spain', to:'Sant Carles de la Ràpita, Spain',
+    badges:'<span class="badge ok">0 € tullar</span> <span class="badge fun">Halvdag BCN!</span>',
+    items:['Sagrada Família (utsidan)','La Boqueria 🥑','Ebrodelta: flamingos 🦩'],
+    sleep:{n:'🎉 La Ràpita — framme!', i:'Se La Ràpita-fliken'}}
+];
+const DEFAULT_HEM = [
+  {id:'hem-14', badge:'Dag 14 · 26 juli', title:'La Ràpita → Zaragoza', sub:'~280 km · 3 h', from:'Sant Carles de la Ràpita, Spain', to:'Zaragoza, Spain',
+    items:['Basílica del Pilar, tapas i gamla stan'],
+    sleep:{n:'Área de autocaravanas Zaragoza', i:'~5–8 €'}},
+  {id:'hem-15', badge:'Dag 15 · 27 juli', title:'Zaragoza → San Sebastián', sub:'~320 km · 3,5 h · Via Pamplona', from:'Zaragoza, Spain', to:'San Sebastián, Spain',
+    items:['Pamplona','La Concha-stranden, pintxos 🍢'],
+    sleep:{n:'Camping Igueldo', i:'~20–25 € · utsikt'}},
+  {id:'hem-16', badge:'Dag 16 · 28 juli', title:'San Sebastián → Bordeaux 🇫🇷', sub:'~210 km · 2,5 h', from:'San Sebastián, Spain', to:'Bordeaux, France',
+    items:['Place de la Bourse, La Cité du Vin'],
+    sleep:{n:'Aire camping-car Bordeaux', i:'~0–8 €'}},
+  {id:'hem-17', badge:'Dag 17 · 29 juli', title:'Bordeaux → Loire-dalen 🏰', sub:'~300 km · 3 h', from:'Bordeaux, France', to:'Amboise, France',
+    items:['Château de Chambord','Cykla längs floden, jordgubbar 🍓'],
+    sleep:{n:'Camping Municipal Amboise', i:'~10–15 €'}},
+  {id:'hem-18', badge:'Dag 18 · 30 juli', title:'Loire → Etretat (Normandie)', sub:'~360 km · 3,5 h', from:'Amboise, France', to:'Étretat, France',
+    items:['Vita kritklippor 🏔️','Strand, crepes 🥞'],
+    sleep:{n:'Étretat strandparkering', i:'~0–5 €'}},
+  {id:'hem-19', badge:'Dag 19 · 31 juli', title:'Etretat → Antwerpen 🇧🇪', sub:'~330 km · 3,5 h', from:'Étretat, France', to:'Antwerp, Belgium',
+    items:['Manneken Pis, choklad &amp; pommes 🍟🍫'],
+    sleep:{n:'P4N: Antwerpen/Mechelen', i:'~0–10 €'}},
+  {id:'hem-20', badge:'Dag 20 · 1 aug', title:'Antwerpen → Malmö', sub:'~480 km · 5 h · Via Amsterdam', from:'Antwerp, Belgium', to:'Malmö, Sweden',
+    items:['Amsterdam: kanalcykel 🚲, NEMO'],
+    sleep:{n:'Hamburg eller Malmö', i:'Välj efter energi'}},
+  {id:'hem-21', badge:'Dag 21–22 · 2–3 aug', title:'Hem till Kållered! 🎉🇸🇪', sub:'~80 km · 1 h', from:'Malmö, Sweden', to:'Kållered, Sweden',
+    items:['Öresundsbron tillbaka 🌉']}
+];
+
+// Förkända koordinater (snabbt — inga API-anrop behövs för dessa)
+const COORDS = {
+  'Kållered, Sweden':[57.4994,12.0683],
+  'Hamburg, Germany':[53.5511,9.9937],
+  'Rothenburg ob der Tauber, Germany':[49.3777,10.1864],
+  'Innsbruck, Austria':[47.2692,11.4041],
+  'Lazise, Italy':[45.5052,10.7327],
+  'La Spezia, Italy':[44.1025,9.8240],
+  'Menton, France':[43.7748,7.5026],
+  'Premià de Mar, Spain':[41.4928,2.3631],
+  'Sant Carles de la Ràpita, Spain':[40.6196,0.5928],
+  'Zaragoza, Spain':[41.6488,-0.8891],
+  'San Sebastián, Spain':[43.3183,-1.9812],
+  'Bordeaux, France':[44.8378,-0.5792],
+  'Amboise, France':[47.4131,0.9821],
+  'Étretat, France':[49.7066,0.2058],
+  'Antwerp, Belgium':[51.2194,4.4025],
+  'Malmö, Sweden':[55.6050,13.0038]
+};
+
+const DEFAULT_LISTS = {
+  van:["🪣 Reservdunk vatten 20 l","🛢️ Extra motorolja","⚠️ Varningstriangel","🦺 Reflexväst x3","🔧 Verktygslåda","💨 Tryckluftspump 12V","⛱️ Markis","🦟 Insektsnät","☀️ Solavskärmning","🔦 Pannlampa x3","🔌 Elförlängning 10 m","💧 Vattenslang"],
+  klader:["👕 Sommarkläder x5/pers","👖 Långbyxa","🧥 Lätt jacka (Alperna!)","🩱 Badkläder x2","🥾 Vandringsskor","🩴 Sandaler","🧢 Solhatt","🌧️ Regnponcho","🩲 Underkläder x7"],
+  kok:["🔥 Gaskök + kassetter","🍳 Stekpanna","🥘 Stor kastrull","☕ Moka-kanna","🍽️ Tallrikar/bestick x4","🪵 Skärbräda","🔪 Knivar x2","🧽 Diskmedel","🧊 Kylväska","🍵 Termos 1 l"],
+  barn:["📓 Resejournal + pennor","📷 Kamera","🎯 Resebingo","🧸 Favoritgosedjur","🎧 Ljudböcker offline","🖍️ Färgläggningsbok","🃏 Uno, Dobble","🎒 Egen ryggsäck","🤿 Snorkelmask","👟 Vattenskor"],
+  halsa:["🩹 Förstahjälpskit","💊 Paracetamol/Ibuprofen","🤧 Antihistamin","🧴 Solkräm SPF 50+","🌿 Aloe vera","🦟 Myggspray","💩 Diarrémedicin","🤢 Åksjuke-plåster","🌡️ Termometer","🆔 EHIC x3"],
+  dok:["🛂 Pass x3","🚗 Körkort","📋 Registreringsbevis","🟢 Grönt kort","🆔 EHIC x3","🛟 Vägassistans","📷 Kopia på pass","📄 Reseförsäkring"]
+};
+const DEFAULT_TIPS = {
+  'barn-prep':["🎒 Egen ryggsäck — hon packar själv","🗺️ Gå igenom kartan tillsammans","🔍 Googla 1 djur per land","🎯 Resebingo: 25 rutor","🎁 Resepris-kuvert öppnas vid Medelhavet!"],
+  'barn-drive':["⏱️ Max 2 h utan paus","🍪 Stoppsbord med snacks","🎧 Ljudböcker: Alfons, Emil, Ronja","📻 SVT godnattsagor offline","🧸 Handdocka som bor i vanen"],
+  'barn-stops':["Hamburg: Miniatur Wunderland (BOKA!) 🚂","Innsbruck: Alpenzoo 🦊","Monaco: Oceanografiska 🐠","Barcelona: Parc de la Ciutadella","Ebrodelta: flamingos 🦩","Loire: Château de Chambord 🏰"],
+  'barn-heat':["🕒 Siesta 12–16","💧 Vattenflaska med pipmunstycke","🏊 Medelhavsbad varje dag — belöning","🧴 Solkräm SPF 50+ varje morgon","👗 Snabbtorkande badklänning"]
+};
+const DEFAULT_GAMES = [
+  {who:'🚙 KLASSIKER', name:'Skyltjakten', d:'Vem ser flest reg-skyltar från olika länder?'},
+  {who:'📏 SMARTLEK', name:'Km-gissaren', d:'Gissa antal km till nästa stad. Närmast vinner.'},
+  {who:'🌈 BINGO', name:'Färg-bingo', d:'Välj varsin bilfärg. Först till 10 vinner.'},
+  {who:'✏️ KREATIVT', name:'Resejournal', d:'Eget resepass — rita + skriv 1–2 meningar per dag.'},
+  {who:'🗺️ GEOGRAFI', name:'Landet på kartan', d:'Dottern pekar var bilen är och navigerar.'},
+  {who:'🎵 MUSIK', name:'Landets låtar', d:'Byt Spotify-lista vid varje gräns. Gissa landet!'},
+  {who:'📷 FOTO', name:'Fotografuppdraget', d:'5 uppdrag/dag: djur, dörr, något rött, leende, landskap.'},
+  {who:'⭐ KVÄLL', name:'Dagens topp 3', d:'Bästa minne, roligaste stunden, godaste maten.'},
+  {who:'🔭 STJÄRNOR', name:'Himlajakt', d:'SkySafari-appen pekar ut stjärnbilder.'}
+];
+const DEFAULT_COSTS = {
+  tull:[
+    {name:'Öresundsbron tur&retur', est:85},
+    {name:'Vinjett Österrike 10 dgr', est:9.9},
+    {name:'Brennerpasset (A13)', est:13},
+    {name:'Italienska motorvägar', est:35},
+    {name:'Franska motorvägar', est:57},
+    {name:'Spanien (AP-7 gratis)', est:0}
+  ],
+  bransle:[
+    {name:'Diesel ~650 l × 1,65 €/l', est:1072}
+  ],
+  sov:[
+    {name:'~12 gratis P4N', est:0},
+    {name:'~8 Stellplätze (5–10 €)', est:70},
+    {name:'~2 budget-camping', est:45}
+  ],
+  mat:[
+    {name:'Mataffär ~30 €/dag', est:660},
+    {name:'Restaurang 1×/dag', est:880},
+    {name:'Entréer & upplevelser', est:100}
+  ]
+};
+
+/* =============== STATE =============== */
+let state = {
+  days: { ned: structuredClone(DEFAULT_NED), hem: structuredClone(DEFAULT_HEM) },
+  lists: structuredClone(DEFAULT_LISTS),    // baslistor + extra tillagda items
+  tips: structuredClone(DEFAULT_TIPS),
+  games: structuredClone(DEFAULT_GAMES),
+  costs: structuredClone(DEFAULT_COSTS),
+  costsExtra: [],                            // [{name,est,real}]
+  costsReal: {},                             // key: "tull-0" → number
+  pack: {},                                  // checked state per id
+  notes: {},                                 // dagens anteckningar
+  coordsExtra: {}                            // cache av geocodade platser
+};
+let remoteApplying = false;
+let saveTimer = null;
+let leafletMap = null, plannedLayers = [], gpsMarker = null, watchId = null;
+
+/* =============== UTILS =============== */
+function flash(msg){
+  const t=document.createElement('div');
+  t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1F2A44;color:#fff;padding:12px 20px;border-radius:999px;font-weight:700;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);font-family:Fredoka,sans-serif';
+  document.body.appendChild(t); setTimeout(()=>t.remove(),1600);
+}
+function setSync(state){
+  const el = document.getElementById('syncdot');
+  const txt = document.getElementById('syncstate');
+  el.classList.remove('ok','err');
+  if(state==='ok'){el.classList.add('ok'); txt.textContent='Synkad ☁️';}
+  else if(state==='err'){el.classList.add('err'); txt.textContent='Offline';}
+  else txt.textContent='Sparar…';
+}
+function mapsUrl(from,to){
+  return 'https://www.google.com/maps/dir/'+encodeURIComponent(from)+'/'+encodeURIComponent(to);
+}
+async function geocode(place){
+  if(COORDS[place]) return COORDS[place];
+  if(state.coordsExtra[place]) return state.coordsExtra[place];
+  try{
+    const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(place));
+    const j = await r.json();
+    if(j && j[0]){
+      const c=[parseFloat(j[0].lat), parseFloat(j[0].lon)];
+      state.coordsExtra[place]=c; scheduleSave();
+      return c;
+    }
+  }catch(e){}
+  return null;
+}
+
+/* =============== TABS =============== */
+document.getElementById('tabs').addEventListener('click', e=>{
+  const b=e.target.closest('.tab'); if(!b) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('p-'+b.dataset.p).classList.add('active');
+  window.scrollTo({top:document.querySelector('.tabs').offsetTop-10,behavior:'smooth'});
+  if(b.dataset.p==='livemap') setTimeout(initOrUpdateMap, 80);
+});
+
+/* =============== DAYS RENDER =============== */
+function renderDays(which){
+  const root = document.getElementById('days-'+which);
+  root.innerHTML='';
+  const arr = state.days[which];
+  arr.forEach((d,idx)=>{
+    const card = document.createElement('div');
+    card.className='card day'+(d.custom?' custom':'');
+    card.dataset.id = d.id;
+    card.innerHTML = `
+      <button class="removebtn" title="Ta bort detta mellanstopp">✕</button>
+      <div class="day-head"><span class="badge">${d.badge||'Mellanstopp'}</span><span class="day-title" data-edit="title">${d.title||''}</span></div>
+      <div class="day-sub" data-edit="sub">${d.sub||''}</div>
+      ${d.badges?`<div data-edit="badges">${d.badges}</div>`:''}
+      <div class="dest">
+        <strong>📍 Från:</strong> <input class="dest-from" value="${(d.from||'').replace(/"/g,'&quot;')}" placeholder="Startplats">
+        <span class="arrow">→</span>
+        <strong>🏁 Till:</strong> <input class="dest-to" value="${(d.to||'').replace(/"/g,'&quot;')}" placeholder="Destination">
+      </div>
+      <div class="label">Sevärt &amp; tips</div>
+      <div class="items"></div>
+      <div class="addrow"><input class="add-item" placeholder="✨ Lägg till tips för dagen..." /><button class="addbtn add-item-btn">➕</button></div>
+      ${d.sleep?`<div class="sleep"><div class="t">🌙 Sovplats</div><div class="n" data-edit="sleepn">${d.sleep.n}</div><div class="i" data-edit="sleepi">${d.sleep.i}</div></div>`:''}
+      <a class="map" target="_blank" rel="noopener" href="${mapsUrl(d.from,d.to)}">🗺️ Google Maps: ${d.badge.split('·')[0].trim()}</a>
+      <div class="notes" data-note="${d.id}">${state.notes[d.id]||''}</div>
+    `;
+    // items
+    const itemsEl = card.querySelector('.items');
+    (d.items||[]).forEach((it,i)=>{
+      const div=document.createElement('div'); div.className='item';
+      div.innerHTML = `<span data-edit="item">${it}</span> <button class="removebtn-inline" title="Ta bort">✕</button>`;
+      div.querySelector('.removebtn-inline').style.display='inline-block';
+      div.querySelector('.removebtn-inline').addEventListener('click',()=>{
+        d.items.splice(i,1); scheduleSave(); renderDays(which);
+      });
+      itemsEl.appendChild(div);
+    });
+    // add item
+    card.querySelector('.add-item-btn').addEventListener('click',()=>{
+      const inp = card.querySelector('.add-item');
+      const v = inp.value.trim(); if(!v) return;
+      d.items = d.items||[]; d.items.push(v); inp.value=''; scheduleSave(); renderDays(which);
+    });
+    // remove custom day
+    card.querySelector('.removebtn').addEventListener('click',()=>{
+      if(d.custom && confirm('Ta bort mellanstoppet "'+d.title+'"?')){
+        state.days[which].splice(idx,1); scheduleSave(); renderDays(which); refreshMapIfOpen();
+      }
+    });
+    // from/to live update
+    const refreshLink = ()=>{
+      d.from = card.querySelector('.dest-from').value;
+      d.to = card.querySelector('.dest-to').value;
+      card.querySelector('a.map').href = mapsUrl(d.from,d.to);
+      scheduleSave(); refreshMapIfOpen();
+    };
+    card.querySelector('.dest-from').addEventListener('change',refreshLink);
+    card.querySelector('.dest-to').addEventListener('change',refreshLink);
+    // editable text fields
+    card.querySelectorAll('[data-edit]').forEach(el=>{
+      el.addEventListener('input',()=>{
+        if(remoteApplying) return;
+        const key=el.dataset.edit;
+        if(key==='title') d.title=el.innerHTML;
+        else if(key==='sub') d.sub=el.innerHTML;
+        else if(key==='badges') d.badges=el.innerHTML;
+        else if(key==='sleepn'){d.sleep=d.sleep||{n:'',i:''}; d.sleep.n=el.innerHTML;}
+        else if(key==='sleepi'){d.sleep=d.sleep||{n:'',i:''}; d.sleep.i=el.innerHTML;}
+        else if(key==='item'){
+          const itemDivs = [...itemsEl.querySelectorAll('[data-edit="item"]')];
+          d.items = itemDivs.map(x=>x.innerHTML);
+        }
+        scheduleSave();
+      });
+    });
+    // notes binding
+    card.querySelector('.notes').addEventListener('input',e=>{
+      if(remoteApplying) return;
+      state.notes[d.id]=e.target.innerHTML; scheduleSave();
+    });
+
+    root.appendChild(card);
+
+    // insert button after this day
+    const insBtn = document.createElement('button');
+    insBtn.className='insertbtn';
+    insBtn.textContent='➕ Lägg till mellanstopp här';
+    insBtn.addEventListener('click',()=>{
+      const name = prompt('Vart vill ni stanna? (t.ex. "München, Germany")');
+      if(!name) return;
+      const prev = d.to || d.from || '';
+      const newDay = {
+        id: which+'-c-'+Date.now(),
+        badge: 'Mellanstopp',
+        title: (prev?prev.split(',')[0]+' → ':'')+name.split(',')[0],
+        sub: 'Inskjuten av dig — redigera fritt',
+        from: prev,
+        to: name,
+        items: [],
+        custom: true
+      };
+      state.days[which].splice(idx+1, 0, newDay);
+      scheduleSave(); renderDays(which); refreshMapIfOpen();
+    });
+    root.appendChild(insBtn);
+  });
+  applyEditMode(document.body.classList.contains('edit'));
+}
+
+/* =============== LISTS (pack / tips) =============== */
+function buildPack(){
+  let total=0;
+  for(const k of Object.keys(DEFAULT_LISTS)){
+    const el=document.getElementById('list-'+k); if(!el) continue;
+    el.innerHTML='';
+    const items = state.lists[k]||[];
+    items.forEach((txt,i)=>{
+      const id=k+'-'+i;
+      const wrap=document.createElement('div'); wrap.className='check';
+      const isCustom = i>=DEFAULT_LISTS[k].length;
+      if(isCustom) wrap.classList.add('custom');
+      const cb=document.createElement('input'); cb.type='checkbox'; cb.id=id;
+      if(state.pack[id]) cb.checked=true;
+      const lbl=document.createElement('label'); lbl.htmlFor=id; lbl.innerHTML=txt;
+      cb.addEventListener('change',()=>{state.pack[id]=cb.checked;scheduleSave();updateProg();});
+      wrap.append(cb,lbl);
+      if(isCustom){
+        const rm=document.createElement('button'); rm.className='removebtn-inline'; rm.textContent='✕'; rm.style.display='inline-block';
+        rm.title='Ta bort';
+        rm.addEventListener('click',()=>{
+          state.lists[k].splice(i,1);
+          delete state.pack[id];
+          // re-index pack state for items after i in same key
+          scheduleSave(); buildPack();
+        });
+        wrap.append(rm);
+      }
+      el.appendChild(wrap); total++;
+    });
+  }
+  window._pTot=total; updateProg();
+}
+function updateProg(){
+  const total=window._pTot||0;
+  const done=Object.values(state.pack).filter(Boolean).length;
+  const fill=document.getElementById('packfill'); if(fill) fill.style.width = total?(done/total*100)+'%':'0%';
+  const cnt=document.getElementById('packcount'); if(cnt) cnt.textContent = done+' / '+total+' packade';
+}
+document.querySelectorAll('[data-addlist]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const k=btn.dataset.addlist;
+    const inp=document.getElementById('add-'+k);
+    const v=inp.value.trim(); if(!v) return;
+    state.lists[k]=state.lists[k]||[]; state.lists[k].push(v);
+    inp.value=''; scheduleSave(); buildPack();
+  });
+});
+
+function buildTips(){
+  for(const k of Object.keys(DEFAULT_TIPS)){
+    const el=document.getElementById('list-'+k); if(!el) continue;
+    el.innerHTML='';
+    const items = state.tips[k]||[];
+    items.forEach((txt,i)=>{
+      const div=document.createElement('div'); div.className='item';
+      div.innerHTML = `<span>${txt}</span> <button class="removebtn-inline" title="Ta bort">✕</button>`;
+      const rm=div.querySelector('.removebtn-inline'); rm.style.display='inline-block';
+      rm.addEventListener('click',()=>{ state.tips[k].splice(i,1); scheduleSave(); buildTips(); });
+      el.appendChild(div);
+    });
+  }
+}
+document.querySelectorAll('[data-addtip]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const k=btn.dataset.addtip;
+    const inp=document.getElementById('add-'+k);
+    const v=inp.value.trim(); if(!v) return;
+    state.tips[k]=state.tips[k]||[]; state.tips[k].push(v);
+    inp.value=''; scheduleSave(); buildTips();
+  });
+});
+
+/* =============== GAMES =============== */
+function buildGames(){
+  const root=document.getElementById('list-games'); root.innerHTML='';
+  state.games.forEach((g,i)=>{
+    const div=document.createElement('div'); div.className='game'+(i>=DEFAULT_GAMES.length?' custom':'');
+    div.innerHTML=`<div class="who">${g.who||'🎲 LEK'}</div><div class="name">${g.name}</div><div class="d">${g.d}</div>
+      ${i>=DEFAULT_GAMES.length?'<button class="removebtn-inline" style="position:absolute;top:10px;right:10px;display:inline-block">✕</button>':''}`;
+    const rm=div.querySelector('.removebtn-inline');
+    if(rm) rm.addEventListener('click',()=>{ state.games.splice(i,1); scheduleSave(); buildGames(); });
+    root.appendChild(div);
+  });
+}
+document.getElementById('add-game-btn').addEventListener('click',()=>{
+  const name=document.getElementById('add-game-name').value.trim();
+  const desc=document.getElementById('add-game-desc').value.trim();
+  if(!name || !desc) return;
+  state.games.push({who:'⭐ EGEN', name, d:desc});
+  document.getElementById('add-game-name').value='';
+  document.getElementById('add-game-desc').value='';
+  scheduleSave(); buildGames();
+});
+
+/* =============== COSTS =============== */
+function costKey(cat,i){return cat+'-'+i;}
+function buildCosts(){
+  for(const cat of Object.keys(DEFAULT_COSTS)){
+    const el=document.getElementById('costs-'+cat); if(!el) continue;
+    el.innerHTML='';
+    state.costs[cat].forEach((row,i)=>{
+      const k=costKey(cat,i);
+      const div=document.createElement('div'); div.className='crow';
+      div.innerHTML=`<div>${row.name}</div><div class="est">~${row.est} €</div>
+        <input class="real" type="number" placeholder="0" value="${state.costsReal[k]??''}" data-k="${k}">`;
+      div.querySelector('input.real').addEventListener('input',e=>{
+        const v=e.target.value; state.costsReal[k]= v===''?undefined:parseFloat(v);
+        if(state.costsReal[k]===undefined) delete state.costsReal[k];
+        scheduleSave(); updateTotals();
+      });
+      el.appendChild(div);
+    });
+  }
+  // extra (egna)
+  const ex=document.getElementById('costs-egna'); ex.innerHTML='';
+  state.costsExtra.forEach((row,i)=>{
+    const k='egna-'+i;
+    const div=document.createElement('div'); div.className='crow';
+    div.innerHTML=`<div>${row.name} <button class="removebtn-inline" style="display:inline-block">✕</button></div>
+      <div class="est">~${row.est||0} €</div>
+      <input class="real" type="number" placeholder="0" value="${state.costsReal[k]??''}">`;
+    div.querySelector('.removebtn-inline').addEventListener('click',()=>{
+      state.costsExtra.splice(i,1); delete state.costsReal[k]; scheduleSave(); buildCosts(); updateTotals();
+    });
+    div.querySelector('input.real').addEventListener('input',e=>{
+      const v=e.target.value; state.costsReal[k]= v===''?undefined:parseFloat(v);
+      if(state.costsReal[k]===undefined) delete state.costsReal[k];
+      scheduleSave(); updateTotals();
+    });
+    ex.appendChild(div);
+  });
+  updateTotals();
+}
+function updateTotals(){
+  let est=0, real=0;
+  for(const cat of Object.keys(DEFAULT_COSTS)){
+    state.costs[cat].forEach((r,i)=>{ est+=Number(r.est)||0; real+=Number(state.costsReal[costKey(cat,i)])||0; });
+  }
+  state.costsExtra.forEach((r,i)=>{ est+=Number(r.est)||0; real+=Number(state.costsReal['egna-'+i])||0; });
+  document.getElementById('tot-est').textContent = Math.round(est)+' €';
+  document.getElementById('tot-real').textContent = Math.round(real)+' €';
+}
+document.getElementById('cost-add').addEventListener('click',()=>{
+  const n=document.getElementById('cost-name').value.trim();
+  const e=parseFloat(document.getElementById('cost-est').value)||0;
+  if(!n) return;
+  state.costsExtra.push({name:n, est:e});
+  document.getElementById('cost-name').value='';
+  document.getElementById('cost-est').value='';
+  scheduleSave(); buildCosts();
+});
+
+/* =============== EDIT MODE =============== */
+function applyEditMode(on){
+  const sel='h1,h2,h3,p,.item span,.day-title,.day-sub,.sleep .n,.sleep .i,.tip,.info,.chip,.label,.game .name,.game .d,.game .who,.notes,[data-edit]';
+  document.querySelectorAll(sel).forEach(el=>el.setAttribute('contenteditable', on?'true':'false'));
+}
+function setEdit(on){
+  document.body.classList.toggle('edit',on);
+  applyEditMode(on);
+  const b=document.getElementById('editBtn');
+  b.classList.toggle('on',on);
+  b.textContent= on?'✅ Klar med redigering':'✏️ Redigeringsläge';
+}
+document.getElementById('editBtn').addEventListener('click',()=>setEdit(!document.body.classList.contains('edit')));
+
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  // Exportera nuvarande dokument (med inbäddat state) som backup
+  const clone=document.documentElement.cloneNode(true);
+  clone.querySelectorAll('[contenteditable]').forEach(e=>e.setAttribute('contenteditable','false'));
+  const html='<!doctype html>\n<html lang="sv">\n'+clone.innerHTML+'\n</html>';
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='index-backup.html'; a.click();
+  flash('📥 Backup nedladdad!');
+});
+document.getElementById('resetBtn').addEventListener('click',async()=>{
+  if(!confirm('Återställa ALLT (dagar, anteckningar, packlista, kostnader)?')) return;
+  state = {
+    days:{ned:structuredClone(DEFAULT_NED), hem:structuredClone(DEFAULT_HEM)},
+    lists:structuredClone(DEFAULT_LISTS), tips:structuredClone(DEFAULT_TIPS),
+    games:structuredClone(DEFAULT_GAMES), costs:structuredClone(DEFAULT_COSTS),
+    costsExtra:[], costsReal:{}, pack:{}, notes:{}, coordsExtra:{}
+  };
+  await saveNow(); location.reload();
+});
+
+/* =============== LIVE MAP =============== */
+async function initOrUpdateMap(){
+  if(!leafletMap){
+    leafletMap = L.map('livemap').setView([46,5], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      attribution:'© OpenStreetMap', maxZoom:18
+    }).addTo(leafletMap);
+  }
+  // clear previous
+  plannedLayers.forEach(l=>leafletMap.removeLayer(l)); plannedLayers=[];
+
+  const drawRoute = async (which,color)=>{
+    const arr=state.days[which];
+    const points=[];
+    // start with first "from", then each "to"
+    if(arr.length && arr[0].from){
+      const c=await geocode(arr[0].from); if(c) points.push({c, name:arr[0].from, custom:false});
+    }
+    for(const d of arr){
+      if(d.to){
+        const c=await geocode(d.to);
+        if(c) points.push({c, name:d.to, custom:!!d.custom, label:d.title});
+      }
+    }
+    // polyline
+    if(points.length>1){
+      const poly = L.polyline(points.map(p=>p.c), {color, weight:4, opacity:.8}).addTo(leafletMap);
+      plannedLayers.push(poly);
+    }
+    // markers
+    points.forEach(p=>{
+      const m = L.circleMarker(p.c, {radius:7, color:'#fff', weight:2, fillColor: p.custom?'#9B5DE5':'#FF6B6B', fillOpacity:1})
+        .bindPopup('<strong>'+(p.label||p.name)+'</strong><br>'+p.name)
+        .addTo(leafletMap);
+      plannedLayers.push(m);
+    });
+    return points;
+  };
+
+  const a = await drawRoute('ned','#3FA7FF');
+  const b = await drawRoute('hem','#7AC74F');
+  const all = [...a,...b].map(p=>p.c);
+  if(all.length) leafletMap.fitBounds(all, {padding:[30,30]});
+  setTimeout(()=>leafletMap.invalidateSize(), 100);
+}
+function refreshMapIfOpen(){
+  if(document.getElementById('p-livemap').classList.contains('active')) initOrUpdateMap();
+}
+document.getElementById('fitBtn').addEventListener('click',()=>{ if(leafletMap) initOrUpdateMap(); });
+document.getElementById('gpsBtn').addEventListener('click',()=>{
+  const btn=document.getElementById('gpsBtn');
+  if(!navigator.geolocation){ flash('GPS stöds inte i denna webbläsare'); return; }
+  if(watchId!=null){
+    navigator.geolocation.clearWatch(watchId); watchId=null;
+    if(gpsMarker){ leafletMap.removeLayer(gpsMarker); gpsMarker=null; }
+    btn.classList.remove('on'); btn.textContent='📍 Visa min position';
+    return;
+  }
+  btn.textContent='⏳ Hämtar GPS...';
+  watchId = navigator.geolocation.watchPosition(pos=>{
+    const c=[pos.coords.latitude, pos.coords.longitude];
+    if(!leafletMap) return;
+    if(!gpsMarker){
+      gpsMarker = L.marker(c, {title:'Du är här'}).addTo(leafletMap).bindPopup('🚐 Här är ni nu!').openPopup();
+      leafletMap.setView(c, 9);
+    } else {
+      gpsMarker.setLatLng(c);
+    }
+    btn.classList.add('on'); btn.textContent='✅ GPS live (tryck för stopp)';
+  }, err=>{
+    btn.textContent='📍 Visa min position';
+    flash('Kunde inte hämta plats: '+err.message);
+  }, {enableHighAccuracy:true, maximumAge:5000, timeout:15000});
+});
+
+/* =============== INIT =============== */
+function renderAll(){
+  renderDays('ned'); renderDays('hem');
+  buildPack(); buildTips(); buildGames(); buildCosts();
+  setEdit(false);
+}
+renderAll();
+
+/* =============== FIREBASE SYNC =============== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyAd9_JejnvfW7HIyL5dB_k1933yLQ_81e8",
+  authDomain:"if-arbetsportal.firebaseapp.com",
+  projectId:"if-arbetsportal",
+  storageBucket:"if-arbetsportal.firebasestorage.app",
+  messagingSenderId:"1090452573649",
+  appId:"1:1090452573649:web:42b3378f707080fc0b64f0"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const tripRef = doc(db, "trips", "europa2025_v2");
+
+function scheduleSave(){ setSync('saving'); clearTimeout(saveTimer); saveTimer=setTimeout(saveNow, 600); }
+async function saveNow(){
+  try{
+    await setDoc(tripRef, { state: JSON.parse(JSON.stringify(state)), updatedAt: Date.now() }, { merge:true });
+    setSync('ok');
+  }catch(e){ console.error(e); setSync('err'); }
+}
+window.saveNow = saveNow;
+
+onSnapshot(tripRef, snap=>{
+  if(!snap.exists()){ setSync('ok'); return; }
+  const data = snap.data();
+  if(!data.state) return;
+  remoteApplying = true;
+  // merge defensively
+  const s = data.state;
+  state.days   = s.days   || state.days;
+  state.lists  = s.lists  || state.lists;
+  state.tips   = s.tips   || state.tips;
+  state.games  = s.games  || state.games;
+  state.costs  = s.costs  || state.costs;
+  state.costsExtra = s.costsExtra || [];
+  state.costsReal  = s.costsReal  || {};
+  state.pack   = s.pack   || {};
+  state.notes  = s.notes  || {};
+  state.coordsExtra = s.coordsExtra || {};
+  renderAll();
+  refreshMapIfOpen();
+  remoteApplying = false;
+  setSync('ok');
+}, err=>{ console.error(err); setSync('err'); });
+</script>
+</body>
+</html>
