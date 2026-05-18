@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🚐 Vår Europaresa 2025 — Kållered → La Ràpita</title>
+<meta name="description" content="Familjens campervanresa genom Europa sommaren 2025." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sun:#FFB627; --sky:#3FA7FF; --sea:#00B8A9; --coral:#FF6B6B;
+    --berry:#9B5DE5; --grass:#7AC74F; --sand:#FFF6E5; --ink:#1F2A44;
+    --muted:#5B6477; --line:#E7EAF0; --card:#FFFFFF; --bg:#FFFAF0;
+    --r:18px; --shadow:0 8px 24px rgba(31,42,68,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;line-height:1.55}
+  h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:-.01em}
+  a{color:#1B6BD4;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 18px 80px}
+
+  /* HERO */
+  .hero{
+    background:
+      radial-gradient(circle at 80% 10%, rgba(255,255,255,.6), transparent 40%),
+      linear-gradient(135deg,#FF6B6B 0%, #FFB627 35%, #00B8A9 75%, #3FA7FF 100%);
+    color:#fff;border-radius:28px;padding:34px 28px;position:relative;overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .hero h1{font-size:clamp(28px,4.4vw,46px);line-height:1.05;margin-bottom:8px;text-shadow:0 2px 10px rgba(0,0,0,.15)}
+  .hero p{font-size:17px;opacity:.95;max-width:720px}
+  .hero .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{background:rgba(255,255,255,.22);backdrop-filter:blur(6px);padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+  .float{position:absolute;font-size:90px;opacity:.18;pointer-events:none}
+  .float.f1{top:-10px;right:20px;transform:rotate(-12deg)}
+  .float.f2{bottom:-20px;left:30px;font-size:80px;transform:rotate(8deg)}
+
+  /* TOOLBAR */
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:14px 0 6px}
+  .tbtn{background:#fff;border:1px solid var(--line);padding:8px 14px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .tbtn:hover{background:#FFF4E0}
+  .tbtn.on{background:#FFE2A8;border-color:#FFB627}
+
+  /* TABS */
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 18px}
+  .tab{padding:10px 16px;border-radius:999px;background:#fff;border:1px solid var(--line);cursor:pointer;font-family:'Fredoka',sans-serif;font-size:14px;font-weight:500;color:var(--muted);transition:.15s}
+  .tab:hover{background:#FFF1D8}
+  .tab.active{background:linear-gradient(135deg,#FF6B6B,#FFB627);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(255,107,107,.3)}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* CARDS */
+  .card{background:var(--card);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);border:1px solid #F1F1F1}
+  .card.day{border-left:6px solid var(--sky)}
+  .day:nth-of-type(6n+1){border-left-color:var(--coral)}
+  .day:nth-of-type(6n+2){border-left-color:var(--sun)}
+  .day:nth-of-type(6n+3){border-left-color:var(--sea)}
+  .day:nth-of-type(6n+4){border-left-color:var(--berry)}
+  .day:nth-of-type(6n+5){border-left-color:var(--grass)}
+  .day-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .badge{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:12px;background:#EAF4FF;color:#1B6BD4}
+  .badge.warn{background:#FFF1D8;color:#A86700}
+  .badge.ok{background:#E4F8E2;color:#2D7A1F}
+  .badge.fun{background:#F1E4FF;color:#6A2DBB}
+  .day-title{font-family:'Fredoka',sans-serif;font-size:19px;font-weight:600}
+  .day-sub{color:var(--muted);font-size:14px;margin:2px 0 10px}
+  .label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:14px 0 6px}
+  .item{font-size:14.5px;padding:6px 0 6px 22px;position:relative}
+  .item::before{content:"✨";position:absolute;left:0;font-size:14px}
+  .day .item:nth-child(3n)::before{content:"🌟"}
+  .day .item:nth-child(3n+1)::before{content:"📍"}
+  .sleep{margin-top:12px;background:linear-gradient(135deg,#FFF6E5,#FFEAD0);padding:12px 14px;border-radius:14px;border:1px dashed #FFB627}
+  .sleep .t{font-size:12px;font-weight:700;color:#A86700;text-transform:uppercase;letter-spacing:.06em}
+  .sleep .n{font-weight:700;margin-top:2px}
+  .sleep .i{font-size:13px;color:var(--muted)}
+  .map{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:linear-gradient(135deg,#3FA7FF,#1B6BD4);color:#fff;padding:9px 16px;border-radius:999px;font-weight:700;font-size:13px;text-decoration:none;box-shadow:0 4px 10px rgba(63,167,255,.35)}
+  .map:hover{transform:translateY(-1px);text-decoration:none}
+  .tip{background:linear-gradient(135deg,#FFF1D8,#FFE2A8);padding:12px 16px;border-radius:14px;margin-top:12px;font-size:14px;color:#7A4F00;border-left:4px solid #FFB627}
+  .info{background:linear-gradient(135deg,#E1F2FF,#CFE7FF);padding:12px 16px;border-radius:14px;margin-top:12px;font-size:14px;color:#0F4C8A;border-left:4px solid #3FA7FF}
+
+  /* PACKLISTA */
+  .progress{height:10px;background:#F1F1F1;border-radius:999px;overflow:hidden;margin:8px 0 4px}
+  .progress > div{height:100%;background:linear-gradient(90deg,#7AC74F,#00B8A9);width:0%;transition:.3s}
+  .check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed #EFEFEF;font-size:14.5px}
+  .check:last-child{border:none}
+  .check input{width:18px;height:18px;accent-color:#FF6B6B;margin-top:3px;cursor:pointer}
+  .check label{cursor:pointer;flex:1}
+  .check input:checked + label{text-decoration:line-through;color:#9AA0AC}
+
+  /* GAMES */
+  .game{background:#fff;border-radius:var(--r);padding:16px 18px;margin-bottom:12px;border:1px solid var(--line);position:relative;overflow:hidden}
+  .game::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,182,39,.18),transparent 70%)}
+  .game .who{font-size:12px;font-weight:700;letter-spacing:.04em;color:#FF6B6B;margin-bottom:4px}
+  .game .name{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;margin-bottom:4px}
+  .game .d{color:var(--muted);font-size:14px}
+
+  /* COSTS */
+  .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #EFEFEF;font-size:14.5px}
+  .row:last-child{border:none}
+  .row .a{font-weight:700;color:#1B6BD4}
+  .total{background:linear-gradient(135deg,#FFE2A8,#FFB627);color:#5A3B00;border-radius:var(--r);padding:16px 18px;font-weight:700;margin-top:10px}
+
+  /* NOTES (editable per day) */
+  .notes{margin-top:14px;background:#FFFAF0;border:2px dashed #FFB627;border-radius:14px;padding:10px 14px;min-height:46px;font-size:14px;outline:none}
+  .notes:empty::before{content:"✏️ Klicka här i redigeringsläge för att lägga till egna anteckningar/tips/bilder för denna dag…";color:#B98A2D}
+
+  /* FOOTER */
+  footer{margin-top:40px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* SECTION INTRO */
+  .intro{font-size:16px;color:var(--muted);margin:0 0 14px}
+  h2.section{font-size:24px;margin-bottom:6px}
+
+  /* EDIT MODE highlight */
+  body.edit [contenteditable="true"]{background:#FFFCE0;outline:2px dashed #FFB627;border-radius:6px;padding:2px 4px}
+
+  @media(max-width:600px){
+    .wrap{padding:14px 10px 60px}
+    .hero{padding:26px 20px}
+    .card{padding:16px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="float f1">🚐</div>
+    <div class="float f2">🏖️</div>
+    <h1 contenteditable="false">🚐 Vår stora Europaresa <br>Kållered → La Ràpita 🇪🇸</h1>
+    <p contenteditable="false">13 juli – ca 7 augusti 2025 · En familjeäventyr med campervan, 100% offgrid, genom 7 länder, längs Medelhavet och hem genom Pyrenéerna. Klart för mamma, pappa &amp; 8-åringen ✨</p>
+    <div class="chips">
+      <span class="chip" contenteditable="false">🗺️ ~4 800 km</span>
+      <span class="chip" contenteditable="false">🌍 7 länder</span>
+      <span class="chip" contenteditable="false">⏳ 22 dagar</span>
+      <span class="chip" contenteditable="false">👨‍👩‍👧 3 personer</span>
+      <span class="chip" contenteditable="false">💶 ~3 300 €</span>
+    </div>
+  </section>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <button class="tbtn" id="editBtn" title="Slå på/av redigering">✏️ Redigeringsläge</button>
+    <button class="tbtn" id="saveBtn" title="Spara i din webbläsare">💾 Spara lokalt</button>
+    <button class="tbtn" id="exportBtn" title="Ladda ner uppdaterad index.html">📥 Exportera HTML</button>
+    <button class="tbtn" id="resetBtn" title="Återställ till original">↺ Återställ</button>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-p="ned">🚗 Ner-resan</button>
+    <button class="tab" data-p="stay">🏖️ La Ràpita</button>
+    <button class="tab" data-p="extra">☀️ Dag 9–13</button>
+    <button class="tab" data-p="hem">🏡 Hem-resan</button>
+    <button class="tab" data-p="sleep">🌙 Sovplatser</button>
+    <button class="tab" data-p="pack">🎒 Packlista</button>
+    <button class="tab" data-p="mat">🍝 Mat i vanen</button>
+    <button class="tab" data-p="barn">🧒 Tips för 8-åringen</button>
+    <button class="tab" data-p="navig">🧭 Navigation</button>
+    <button class="tab" data-p="games">🎮 Lekar för vägen</button>
+    <button class="tab" data-p="costs">💶 Kostnader</button>
+  </div>
+
+  <!-- ============== NER ============== -->
+  <div class="panel active" id="p-ned">
+    <p class="intro">🛣️ Sverige → Danmark → Tyskland → Österrike → Italien → Frankrike → Spanien — längs Medelhavsrutan.</p>
+
+    <div class="card day">
+      <div class="day-head"><span class="badge">Dag 1 · 13 juli</span><span class="day-title">Kållered → Hamburg 🇩🇪</span></div>
+      <div class="day-sub">~460 km · 4,5 h · Via Malmö, Köpenhamn, Öresundsbron</div>
+      <div><span class="badge warn">Öresundsbron ~430 kr</span> <span class="badge fun">🌉 Stor bro-upplevelse!</span></div>
+      <div class="label">Sevärt</div>
+      <div class="item">Stopp i Köpenhamn ~1 h — promenad längs Nyhavn, peka ut Sjöjungfrun 🧜‍♀️</div>
+      <div class="item">Hamburg: Speicherstadt (sagolika lagerhus) &amp; Miniatur Wunderland (världens största modelljärnväg — barndröm! 🚂)</div>
+      <div class="sleep"><div class="t">🌙 Sovplats</div><div class="n">P4N: Raststätte Stillhorn / Elbe-Rastplatz Hamburg</div><div class="i">Gratis längs E45 söder om Hamburg · sanitär på rastplatsen</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/K%C3%A5llered,+Sweden/Hamburg,+Germany" target="_blank" rel="noopener">🗺️ Google Maps: Dag 1</a>
+      <div class="notes" contenteditable="false" data-note="ned-1"></div>
+    </div>
+
+    <div class="card day">
+      <div class="day-head"><span class="badge">Dag 2 · 14 juli</span><span class="day-title">Hamburg → Rothenburg ob der Tauber 🏰</span></div>
+      <div class="day-sub">~470 km · 4,5 h · A7 söderut</div>
+      <div><span class="badge ok">Inga vägtullar i Tyskland</span></div>
+      <div class="label">Sevärt</div>
+      <div class="item">En av Europas finaste medeltidsstäder — promenad på stadsmuren</div>
+      <div class="item">Kriminalmuseum (riddarsaker) + smaka Schneeball-kaka 🍪</div>
+      <div class="sleep"><div class="t">🌙 Sovplats</div><div class="n">Stellplatz Rothenburg</div><div class="i">6–10 € · strax utanför stadsmuren · toaletter</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Hamburg,+Germany/Rothenburg+ob+der+Tauber,+Germany" target="_blank" rel="noopener">🗺️ Google Maps: Dag 2</a>
+      <div class="notes" contenteditable="false" data-note="ned-2"></div>
+    </div>
+
+    <div class="card day">
+      <div class="day-head"><span class="badge">Dag 3 · 15 juli</span><span class="day-title">Rothenburg → Innsbruck 🇦🇹</span></div>
+      <div class="day-sub">~320 km · 3,5 h · Via München, A8/A93</div>
+      <div><span class="badge warn">Vinjett ~9,90 €</span> <span class="badge fun">⛰️ Alperna börjar!</span></div>
+      <div class="item">Gyllene taket, Bergisel-hoppbacken (hiss upp för utsikten)</div>
+      <div class="item">Alpenzoo — alpernas djur i naturmiljö, älskat av barn 🦊</div>
+      <div class="sleep"><div class="t">🌙 Sovplats</div><div class="n">P4N: Innsbruck Inn Ufer</div><div class="i">Gratis vid floden · fin natur</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Rothenburg+ob+der+Tauber/Innsbruck,+Austria" target="_blank" rel="noopener">🗺️ Google Maps: Dag 3</a>
+      <div class="notes" contenteditable="false" data-note="ned-3"></div>
+    </div>
+
+    <div class="card day">
+      <div class="day-head"><span class="badge">Dag 4 · 16 juli</span><span class="day-title">Innsbruck → Gardasjön 🇮🇹</span></div>
+      <div class="day-sub">~210 km · 2,5 h · Brennerpasset (A13/A22)</div>
+      <div><span class="badge warn">Brenner ~13 €</span> <span class="badge warn">Motorväg ~8 €</span> <span class="badge ok">Lång eftermiddag vid sjön!</span></div>
+      <div class="item">Gardasjön — Italiens största sjö, kristallklart vatten 💦 Simma, glass, pizza</div>
+      <div class="item">Lazise: söt medeltidshamn med slott</div>
+      <div class="item">Gardaland nöjespark intill (extra dag möjlig 🎢)</div>
+      <div class="sleep"><div class="t">🌙 Sovplats</div><div class="n">P4N: Punta Cornicello, Lazise</div><div class="i">Gratis/låg kostnad · direkt vid sjön · nattvakt · toaletter</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Innsbruck,+Austria/Lazise,+VR,+Italy" target="_blank" rel="noopener">🗺️ Google Maps: Dag 4</a>
+      <div class="notes" contenteditable="false" data-note="ned-4"></div>
+    </div>
+
+    <div class="card day">
+      <div class="day-head"><span class="badge">Dag 5 · 17 juli</span><span class="day-title">Gardasjön → Cinque Terre / La Spezia 🌈</span></div>
+      <div class="day-sub">~320 km · 3,5 h · A4 västerut, A7 söderut</div>
+      <div><span class="badge warn">Motorväg ~12–16 €</span> <span class="badge fun">Världsarv!</span></div>
+      <div class="item">5 färgglada byar klängda på klipporna ovanför havet</div>
+      <div class="item">Tåg mellan byarna (dagskort ~4 €/barn, 8 €/vuxen) — Vernazza &amp; Manarola finast</div>
+      <div class="item">Simma i kristallklart vatten vid Monterosso</div>
+      <div class="sleep"><div class="t">🌙 Sovplats</div><div class="n">Area Sosta La Spezia (hamn)</div><div class="i">P4N · 0–5 € · tåg till Cinque Terre härifrån</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Lazise,+VR,+Italy/La+Spezia,+SP,+Italy" target="_blank" rel="noopener">🗺️ Google Maps: Dag 5</a>
+      <div class="notes" contenteditable="false" data-note="ned-5"></div>
+    </div>
+
+    <div class="card day">
+      <div class="day-head"><span class="badge">Dag 6 · 18 juli</span><span class="day-title">La Spezia → Monaco / Menton 🇲🇨</span></div>
+      <div class="day-sub">~210 km · 2,5 h · Längs Rivieran, A10</div>
+      <div><span class="badge warn">Tull Rivieran ~10–15 €</span></div>
+      <div class="item">Monaco: F1-banan, Slottsgården, Oceanografiska museet (akvarium 🐠)</div>
+      <div class="item">Menton: charmig gränsstad med citronträd</div>
+      <div class="item">Bonus: Antibes/Cannes på vägen</div>
+      <div class="sleep"><div class="t">🌙 Sovplats</div><div class="n">P4N: Aire de Camping-Car, Menton Borrigo</div><div class="i">~5 € · kommunal · vatten + el</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/La+Spezia,+SP,+Italy/Menton,+France" target="_blank" rel="noopener">🗺️ Google Maps: Dag 6</a>
+      <div class="notes" contenteditable="false" data-note="ned-6"></div>
+    </div>
+
+    <div class="card day">
+      <div class="day-head"><span class="badge">Dag 7 · 19 juli</span><span class="day-title">Menton → norra Barcelona 🇪🇸</span></div>
+      <div class="day-sub">~500 km · 5 h · A9 längs kusten, in i Spanien!</div>
+      <div><span class="badge warn">Franska tullen ~20–25 €</span> <span class="badge ok">Spanien: AP-7 är GRATIS!</span></div>
+      <div class="item">Stopp i Perpignan (1 h) — vacker katalansk-fransk stad</div>
+      <div class="item">Costa Brava: Cadaqués &amp; Begur är magiska om tid finns</div>
+      <div class="sleep"><div class="t">🌙 Sovplats</div><div class="n">P4N: Premià de Mar (norr om BCN)</div><div class="i">Gratis kommunal · direkt vid havet · dusch i närheten</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Menton,+France/Premi%C3%A0+de+Mar,+Spain" target="_blank" rel="noopener">🗺️ Google Maps: Dag 7</a>
+      <div class="notes" contenteditable="false" data-note="ned-7"></div>
+    </div>
+
+    <div class="card day">
+      <div class="day-head"><span class="badge">Dag 8 · 20 juli</span><span class="day-title">Barcelona → La Ràpita 🎉</span></div>
+      <div class="day-sub">~190 km · 2 h · AP-7/A-7 söderut (fri motorväg!)</div>
+      <div><span class="badge ok">0 € tullar</span> <span class="badge fun">Halvdag i Barcelona!</span></div>
+      <div class="item">Sagrada Família (utsidan räcker — gratis &amp; köfritt), La Barceloneta-strand, La Boqueria 🥑</div>
+      <div class="item">Ebrodelta på vägen: flamingos 🦩 &amp; risfält — magiskt landskap</div>
+      <div class="sleep"><div class="t">🌙 DESTINATION!</div><div class="n">🎉 La Ràpita — ni är framme!</div><div class="i">Se La Ràpita-fliken för sovplats &amp; aktiviteter</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Premi%C3%A0+de+Mar,+Spain/Sant+Carles+de+la+R%C3%A0pita,+Spain" target="_blank" rel="noopener">🗺️ Google Maps: Dag 8</a>
+      <div class="notes" contenteditable="false" data-note="ned-8"></div>
+    </div>
+  </div>
+
+  <!-- ============== STAY ============== -->
+  <div class="panel" id="p-stay">
+    <h2 class="section">🏖️ La Ràpita — 21–25 juli</h2>
+    <p class="intro">Idyllisk fiskestad vid Ebrodeltans mynning — gratis parkering längs hamnen för campervans.</p>
+
+    <div class="card">
+      <div class="label">🌙 Sovplats</div>
+      <div class="item">P4N bekräftad: <strong>Hamnen i La Ràpita (Passeig Marítim)</strong> — gratis, toaletter vid stranden, mataffär 5 min bort</div>
+      <div class="item">Backup: <strong>Camping La Ràpita</strong> (dusch &amp; pool) ~25 €/natt</div>
+      <a class="map" href="https://www.google.com/maps/place/Sant+Carles+de+la+R%C3%A0pita,+Spain" target="_blank" rel="noopener">🗺️ Google Maps: La Ràpita</a>
+    </div>
+
+    <div class="card">
+      <div class="label">☀️ Aktiviteter</div>
+      <div class="item">🦩 <strong>Ebrodelta naturpark</strong> — flamingos, sköldpaddor, risfält. Cykla runt!</div>
+      <div class="item">🏖️ <strong>Playa de la Eucaliptus</strong> — en av Kataloniens finaste stränder, grund &amp; säker</div>
+      <div class="item">⛴️ <strong>Färjetur till Fangar-udden</strong> — liten lokal färja</div>
+      <div class="item">🦐 <strong>Fisk &amp; skaldjur</strong> direkt från hamnen — räkor, blåmusslor, paella</div>
+      <div class="item">🛶 <strong>Kayak i deltakanaler</strong> — hyrbar i hamn ~10–15 €/h</div>
+      <div class="item">🌅 <strong>Solnedgång vid Punta del Fangar</strong> — cykla eller gå</div>
+      <div class="item">🏰 <strong>Tortosa dagstrip</strong> — 30 min, medeltidsborg &amp; katedral</div>
+      <div class="tip">💡 Liten, lugn äkta spansk fiskestad utan turistmassor. Barn leker fritt vid hamnen, glass på varje hörn 🍦</div>
+      <div class="notes" contenteditable="false" data-note="stay-1"></div>
+    </div>
+  </div>
+
+  <!-- ============== EXTRA dag 9-13 ============== -->
+  <div class="panel" id="p-extra">
+    <h2 class="section">☀️ Dag 9–13 — Förslag dagsprogram</h2>
+    <p class="intro">Om ni stannar 5 dagar (21–25 juli) i La Ràpita.</p>
+
+    <div class="card day"><div class="day-head"><span class="badge">Dag 9 · 21 juli</span><span class="day-title">Ankomstdag 🛬</span></div>
+      <div class="item">Packa upp, handla på Mercadona/Consum</div>
+      <div class="item">Tapas-bar vid hamnen 🦐 + cerveza &amp; limonad för dottern</div>
+      <div class="item">🌅 Solnedgång från hamnpiren</div>
+      <div class="notes" contenteditable="false" data-note="extra-9"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 10 · 22 juli</span><span class="day-title">Stranddag 🏖️</span></div>
+      <div class="item">Playa de la Eucaliptus — 8 km öde sandstrand med grunt vatten</div>
+      <div class="item">Sandslott, snäckor, snorkling</div>
+      <div class="item">Koka paella i vanen med färska musslor 🥘</div>
+      <a class="map" href="https://www.google.com/maps/place/Platja+de+l'Eucaliptus,+Amposta" target="_blank" rel="noopener">🗺️ Playa de la Eucaliptus</a>
+      <div class="notes" contenteditable="false" data-note="extra-10"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 11 · 23 juli</span><span class="day-title">Ebrodelta 🦩</span></div>
+      <div class="item">Hyr cyklar (10–15 €/dag) och cykla ut i deltat</div>
+      <div class="item">Flamingo-utsikt vid Laguna de la Tancada — ta kikare!</div>
+      <div class="item">Risfälten är guldgula i juli 🌾</div>
+      <div class="item">Lunch i Deltebre — äkta menú del día</div>
+      <a class="map" href="https://www.google.com/maps/place/Parc+Natural+del+Delta+de+l%27Ebre" target="_blank" rel="noopener">🗺️ Ebrodelta naturpark</a>
+      <div class="notes" contenteditable="false" data-note="extra-11"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 12 · 24 juli</span><span class="day-title">Tortosa dagstrip 🏰</span></div>
+      <div class="item">Castillo de la Suda — medeltidsborg med panorama över Ebro</div>
+      <div class="item">Katedral (fri entré), promenad i gamla stan, glass på torg</div>
+      <a class="map" href="https://www.google.com/maps/dir/Sant+Carles+de+la+R%C3%A0pita/Tortosa,+Spain" target="_blank" rel="noopener">🗺️ Tortosa</a>
+      <div class="notes" contenteditable="false" data-note="extra-12"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 13 · 25 juli</span><span class="day-title">Sista dagen vid havet 🌊</span></div>
+      <div class="item">Simma, glass, promenad på strandpromenaden</div>
+      <div class="item">Hyra liten motorbåt (~40 €/h) ut mot flamingo-lagunen</div>
+      <div class="item">🏅 Diplom till dottern: "Jag har simmat i Medelhavet!"</div>
+      <div class="item">Packa inför Zaragoza imorgon</div>
+      <div class="info">💡 Gå till hamnen 06:30–08:00 när fiskebåtarna kommer in. Tonfisk, svärdsfisk, räkor lossas — minne för livet!</div>
+      <div class="notes" contenteditable="false" data-note="extra-13"></div>
+    </div>
+  </div>
+
+  <!-- ============== HEM ============== -->
+  <div class="panel" id="p-hem">
+    <p class="intro">🏡 Hem via Pyrenéerna, södra Frankrike &amp; Belgien. Avresa 26 juli, hemma 2–3 augusti.</p>
+
+    <div class="card day"><div class="day-head"><span class="badge">Dag 14 · 26 juli</span><span class="day-title">La Ràpita → Zaragoza</span></div>
+      <div class="day-sub">~280 km · 3 h</div>
+      <div class="item">Basílica del Pilar vid floden, tapas i gamla stan</div>
+      <div class="sleep"><div class="t">🌙</div><div class="n">Área de autocaravanas Zaragoza</div><div class="i">~5–8 € · el + vatten</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Sant+Carles+de+la+R%C3%A0pita/Zaragoza,+Spain" target="_blank" rel="noopener">🗺️ Google Maps</a>
+      <div class="notes" contenteditable="false" data-note="hem-14"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 15 · 27 juli</span><span class="day-title">Zaragoza → San Sebastián</span></div>
+      <div class="day-sub">~320 km · 3,5 h · Via Pamplona</div>
+      <div class="item">Pamplona: tjurspringningens stad (lugnt i juli!)</div>
+      <div class="item">San Sebastián: La Concha-stranden, pintxos-bar-hopping 🍢</div>
+      <div class="sleep"><div class="t">🌙</div><div class="n">Camping Igueldo</div><div class="i">~20–25 € · utsikt · dusch + el</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Zaragoza,+Spain/San+Sebasti%C3%A1n,+Spain" target="_blank" rel="noopener">🗺️ Google Maps</a>
+      <div class="notes" contenteditable="false" data-note="hem-15"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 16 · 28 juli</span><span class="day-title">San Sebastián → Bordeaux 🇫🇷</span></div>
+      <div class="day-sub">~210 km · 2,5 h</div>
+      <div class="item">Place de la Bourse, La Cité du Vin (juice för barnen!)</div>
+      <div class="sleep"><div class="t">🌙</div><div class="n">Aire camping-car Bordeaux</div><div class="i">~0–8 €</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/San+Sebasti%C3%A1n,+Spain/Bordeaux,+France" target="_blank" rel="noopener">🗺️ Google Maps</a>
+      <div class="notes" contenteditable="false" data-note="hem-16"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 17 · 29 juli</span><span class="day-title">Bordeaux → Loire-dalen 🏰</span></div>
+      <div class="day-sub">~300 km · 3 h</div>
+      <div class="item">Château de Chambord — sagoslott med dubbla spiraltrappor</div>
+      <div class="item">Cykla längs floden, lokal getost &amp; jordgubbar 🍓</div>
+      <div class="sleep"><div class="t">🌙</div><div class="n">Camping Municipal Amboise</div><div class="i">~10–15 € · dusch + el</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Bordeaux,+France/Amboise,+France" target="_blank" rel="noopener">🗺️ Google Maps</a>
+      <div class="notes" contenteditable="false" data-note="hem-17"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 18 · 30 juli</span><span class="day-title">Loire → Etretat (Normandie)</span></div>
+      <div class="day-sub">~360 km · 3,5 h</div>
+      <div class="item">Dramatiska vita kritklippor 🏔️ Vandring längs klippkanten</div>
+      <div class="item">Strand, skaldjur &amp; crepes 🥞</div>
+      <div class="sleep"><div class="t">🌙</div><div class="n">Étretat strandparkering</div><div class="i">~0–5 €</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Amboise,+France/Étretat,+France" target="_blank" rel="noopener">🗺️ Google Maps</a>
+      <div class="notes" contenteditable="false" data-note="hem-18"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 19 · 31 juli</span><span class="day-title">Etretat → Antwerpen 🇧🇪</span></div>
+      <div class="day-sub">~330 km · 3,5 h · Via Calais</div>
+      <div class="item">Manneken Pis, Grand Place, belgisk choklad &amp; pommes 🍟🍫</div>
+      <div class="sleep"><div class="t">🌙</div><div class="n">P4N: Antwerpen/Mechelen</div><div class="i">~0–10 €</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Étretat,+France/Antwerp,+Belgium" target="_blank" rel="noopener">🗺️ Google Maps</a>
+      <div class="notes" contenteditable="false" data-note="hem-19"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 20 · 1 aug</span><span class="day-title">Antwerpen → Malmö</span></div>
+      <div class="day-sub">~480 km · 5 h · Via Amsterdam, E22</div>
+      <div class="item">Amsterdam: kanalcykel 🚲, NEMO Science Museum (barnfavorit)</div>
+      <div class="sleep"><div class="t">🌙</div><div class="n">Sista övernattning: Hamburg eller Malmö</div><div class="i">Välj efter energi!</div></div>
+      <a class="map" href="https://www.google.com/maps/dir/Antwerp,+Belgium/Malm%C3%B6,+Sweden" target="_blank" rel="noopener">🗺️ Google Maps</a>
+      <div class="notes" contenteditable="false" data-note="hem-20"></div>
+    </div>
+    <div class="card day"><div class="day-head"><span class="badge">Dag 21–22 · 2–3 aug</span><span class="day-title">Hem till Kållered! 🎉🇸🇪</span></div>
+      <div class="day-sub">Malmö → Kållered: ~80 km · 1 h</div>
+      <div class="item">Öresundsbron tillbaka 🌉</div>
+      <a class="map" href="https://www.google.com/maps/dir/Malm%C3%B6,+Sweden/K%C3%A5llered,+Sweden" target="_blank" rel="noopener">🗺️ Sista biten</a>
+      <div class="notes" contenteditable="false" data-note="hem-21"></div>
+    </div>
+  </div>
+
+  <!-- ============== SLEEP ============== -->
+  <div class="panel" id="p-sleep">
+    <h2 class="section">🌙 Sovplatser — offgrid-strategi</h2>
+    <p class="intro">Vanen är offgrid → prioritera gratis P4N. Ha alltid backup-camping om platsen är full.</p>
+    <div class="card">
+      <div class="label">🔎 Hitta platser</div>
+      <div class="item"><strong>park4night.com</strong> — filtrera "gratis", läs senaste recensioner. Ladda ner offline!</div>
+      <div class="item"><strong>Caravanpark-app</strong> — backup för Spanien/Frankrike</div>
+      <div class="item"><strong>iOverlander</strong> — vildare platser</div>
+      <div class="item"><strong>Google Maps</strong> — sök "[stad] camper stellplatz" / "área autocaravanas [stad]"</div>
+    </div>
+    <div class="card">
+      <div class="label">🌍 Regler per land</div>
+      <div class="item">🇸🇪🇩🇰 Allemansrätten — fritt på naturmark</div>
+      <div class="item">🇩🇪 Vildparkering tolereras på Raststätten</div>
+      <div class="item">🇦🇹 Officiella Stellplätze ~5–10 €</div>
+      <div class="item">🇮🇹 Varierar — många gratis kommunala Areas</div>
+      <div class="item">🇫🇷 Bra kommunala Aires — ofta 3–8 €</div>
+      <div class="item">🇪🇸 P4N-platser pålitliga — håll rent!</div>
+    </div>
+    <div class="card">
+      <div class="label">🌡️ Varmt väder (juli)</div>
+      <div class="item">Parkera i skugga eller mot nord/öst</div>
+      <div class="item">Solskydd/markis — livräddare för barnet</div>
+      <div class="item">Insektsnät i fönstren — sov med dem öppna (annars 35°C inne)</div>
+      <div class="item">Fyll vatten varje dag — bensinstationer &amp; kommuner har ofta kran</div>
+      <div class="tip">💡 Solpaneler + litium-batteri klarar kyl + USB. 20 l reservdunk. Toa: töm på Stellplätze.</div>
+    </div>
+  </div>
+
+  <!-- ============== PACK ============== -->
+  <div class="panel" id="p-pack">
+    <h2 class="section">🎒 Interaktiv packlista</h2>
+    <p class="intro">Kryssa av — sparas automatiskt i din webbläsare ✅</p>
+    <div class="card">
+      <div class="label">🎯 Framsteg</div>
+      <div class="progress"><div id="packfill"></div></div>
+      <div id="packcount" style="font-size:13px;color:var(--muted);margin-top:6px">0 / 0 packade</div>
+    </div>
+    <div class="card"><div class="label">🚐 Van &amp; teknik</div><div id="list-van"></div></div>
+    <div class="card"><div class="label">👕 Kläder (3 pers, 3 v)</div><div id="list-klader"></div></div>
+    <div class="card"><div class="label">🍳 Kök &amp; mat</div><div id="list-kok"></div></div>
+    <div class="card"><div class="label">🧒 Barn-specifikt</div><div id="list-barn"></div></div>
+    <div class="card"><div class="label">🩹 Hälsa &amp; säkerhet</div><div id="list-halsa"></div></div>
+    <div class="card"><div class="label">📄 Dokument</div><div id="list-dok"></div></div>
+  </div>
+
+  <!-- ============== MAT ============== -->
+  <div class="panel" id="p-mat">
+    <h2 class="section">🍝 Mat i campervanen</h2>
+    <div class="card">
+      <div class="label">🥫 Basvaror alltid ombord</div>
+      <div class="item">Pasta, ris, linser, konserverade tomater, kikärtor</div>
+      <div class="item">Olivolja, salt, peppar, vitlök, oregano, paprikapulver</div>
+      <div class="item">Knäckebröd &amp; müsli (håller länge)</div>
+      <div class="item">Nötter &amp; torkad frukt (snacks i bilen)</div>
+      <div class="item">UHT-mjölk (ingen kyl krävs)</div>
+      <div class="item">Buljongkuber, sojasås, senap, honung</div>
+    </div>
+    <div class="card">
+      <div class="label">🍳 Enkla recept för 3 på gasplatta</div>
+      <div style="font-weight:700;margin-top:6px">Frukost (10 min)</div>
+      <div class="item">Havregryn med lokal frukt &amp; honung</div>
+      <div class="item">Äggröra med bröd</div>
+      <div class="item">Yoghurt + müsli + bär (Spanien har superb yoghurt!)</div>
+      <div style="font-weight:700;margin-top:10px">Lunch (15 min)</div>
+      <div class="item">Pastasallad med konserv-grönsaker &amp; oliver</div>
+      <div class="item">Wraps med hummus, tomat, gurka</div>
+      <div class="item">Soppa från tetrapack + bröd</div>
+      <div style="font-weight:700;margin-top:10px">Middag (20 min)</div>
+      <div class="item">🍝 Pasta + tomatsås + parmesan</div>
+      <div class="item">🍚 Stekt ris med ägg, grönsaker &amp; soja</div>
+      <div class="item">🧀 Grillad halloumi + couscous + spanska tomater</div>
+      <div class="item">🌮 Fisk-tacos med färsk fisk från La Ràpitas hamn</div>
+    </div>
+    <div class="card">
+      <div class="label">🥖 Lokala delikatesser att smaka</div>
+      <div class="item">🇩🇪 Brezel &amp; Leberwurst från bageri</div>
+      <div class="item">🇦🇹 Sacher-tårta + Käsekrainer (grillkorv med ost i!)</div>
+      <div class="item">🇮🇹 Burrata, focaccia, prosciutto från marknaden</div>
+      <div class="item">🇫🇷 Frais fromage, baguette, croissant, Camembert</div>
+      <div class="item">🇪🇸 Pan con tomate, Manchego, chorizo, paella</div>
+      <div class="tip">💡 Köp bröd lokalt varje morgon — billigare, färskare, dottern lär sig "Une baguette s'il vous plaît"!</div>
+    </div>
+  </div>
+
+  <!-- ============== BARN ============== -->
+  <div class="panel" id="p-barn">
+    <h2 class="section">🧒 Tips för 8-åringen</h2>
+    <div class="card"><div class="label">🎈 Förberedelser hemma</div>
+      <div class="item">🎒 Egen liten ryggsäck — hon packar själv</div>
+      <div class="item">🗺️ Gå igenom kartan tillsammans, peka ut länderna</div>
+      <div class="item">🔍 Låt henne googla 1 djur eller maträtt per land</div>
+      <div class="item">🎯 Skapa "resebingo" — 25 rutor med saker att hitta (flamingo, segelbåt, vindruvor, bergstoppar...)</div>
+      <div class="item">🎁 "Resepris-kuvert" som öppnas vid första Medelhavsbadet!</div>
+    </div>
+    <div class="card"><div class="label">🚗 Långa körningar</div>
+      <div class="item">⏱️ Max 2 h utan paus — stoppa vid vackra utsiktsplatser, inte bara mackar</div>
+      <div class="item">🍪 "Stoppsbord" — snacks, pennor, klistermärken, aktivitetskort</div>
+      <div class="item">🎧 Ljudböcker: Alfons Åberg, Emil i Lönneberga, Ronja Rövardotter</div>
+      <div class="item">📻 SVT Play "Godnattsagor" offline</div>
+      <div class="item">🧸 Handdocka som "bor" i vanen och kommenterar resan</div>
+    </div>
+    <div class="card"><div class="label">📍 Barnvänliga stopp</div>
+      <div class="item">Hamburg: Miniatur Wunderland (BOKA online! 🚂)</div>
+      <div class="item">Innsbruck: Alpenzoo 🦊</div>
+      <div class="item">Monaco: Oceanografiska museet 🐠</div>
+      <div class="item">Barcelona: Parc de la Ciutadella — roddbåtar &amp; lekplatser, gratis</div>
+      <div class="item">Ebrodelta: flamingos 🦩</div>
+      <div class="item">Loire: Château de Chambord — riktigt Disneyslott 🏰</div>
+    </div>
+    <div class="card"><div class="label">🌞 Sommarvärme — hålla glad</div>
+      <div class="item">🕒 Siesta: kör 07–12, vilopaus 12–16, lek 16–20</div>
+      <div class="item">💧 Vattenflaska med pipmunstycke — hon dricker mer</div>
+      <div class="item">🏊 Obligatoriskt Medelhavsbad varje dag — "belöning"</div>
+      <div class="item">🧴 Solkräm SPF 50+ varje morgon — rutin, inte diskussion</div>
+      <div class="item">👗 Snabbtorkande badklänning</div>
+      <div class="info">💖 8-åringar minns resor hela livet när de har eget ansvar. Ge henne roller: fotograf, kartläsare, matval-chef, kvällsdagbok-skrivare.</div>
+    </div>
+  </div>
+
+  <!-- ============== NAVIG ============== -->
+  <div class="panel" id="p-navig">
+    <h2 class="section">🧭 Navigation &amp; praktisk info</h2>
+    <div class="card"><div class="label">📱 Appar att ladda ner INNAN avfärd</div>
+      <div class="item">Google Maps / Maps.me — ladda ner DE, AT, IT, FR, ES offline</div>
+      <div class="item">Park4Night (Premium ~15 €/år, värt det!)</div>
+      <div class="item">iOverlander — backup för vildplatser</div>
+      <div class="item">Waze — realtidstrafik online</div>
+      <div class="item">TollGuru / ViaMichelin — beräkna tullar per land</div>
+      <div class="item">XE Currency — valutaomvandling offline</div>
+      <div class="item">Google Translate med nedladdade paket DE/IT/FR/ES/CAT</div>
+    </div>
+    <div class="card"><div class="label">📶 Datakort &amp; uppkoppling</div>
+      <div class="item">Svenskt abonnemang täcker hela EU — använd som hemma</div>
+      <div class="item">Stäng av roaming på barnens enheter</div>
+      <div class="item">Backup: spanskt SIM (Lidl Móvil / Orange) om ni stannar länge</div>
+    </div>
+    <div class="card"><div class="label">🛣️ Viktiga vägnummer per etapp</div>
+      <div class="item">🇸🇪→🇩🇰: E6/E20 → Öresundsbron</div>
+      <div class="item">🇩🇰→🇩🇪: E45 mot Hamburg</div>
+      <div class="item">🇩🇪→🇦🇹: A7 → A8 → A93 mot Innsbruck</div>
+      <div class="item">🇦🇹→🇮🇹: A13 (Brenner) → A22 mot Gardasjön</div>
+      <div class="item">🇮🇹→🇫🇷: A4 → A7 → A10 längs Rivieran</div>
+      <div class="item">🇫🇷→🇪🇸: A9 → AP-7 (fri motorväg!)</div>
+      <div class="item">🇪🇸→La Ràpita: N-340 / A-7 söderut</div>
+    </div>
+    <div class="card"><div class="label">🆘 Nödnummer</div>
+      <div class="item">📞 112 — EU-nödnummer (fungerar överallt)</div>
+      <div class="item">Vägassistans: kolla ert försäkringsavtal</div>
+      <div class="item">EHIC-kort (gröna EU-kortet) — gratis sjukvård i EU!</div>
+      <div class="tip">💡 Spara alla Google Maps-länkar från fliken som "Sparade platser" — då hittar du dem offline.</div>
+    </div>
+  </div>
+
+  <!-- ============== GAMES ============== -->
+  <div class="panel" id="p-games">
+    <h2 class="section">🎮 Lekar &amp; aktiviteter för vägen</h2>
+
+    <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;margin:14px 0 6px">🚗 För föraren — säkra lekar</div>
+    <div class="game"><div class="who">🚙 KLASSIKER</div><div class="name">Skyltjakten</div><div class="d">Vem ser flest registreringsskyltar från olika länder? Dottern håller lista. Extra poäng för exotiska länder (RO, UA, MN)!</div></div>
+    <div class="game"><div class="who">📏 SMARTLEK</div><div class="name">Km-gissaren</div><div class="d">Alla gissar hur många km till nästa stad. Närmast vinner — väljer musik eller snack-stopp. Tränar avståndskänsla!</div></div>
+    <div class="game"><div class="who">🌈 BINGO</div><div class="name">Färg-bingo</div><div class="d">Välj varsin bilfärg. Först till 10 vinner. Föraren får ropa men måste hålla blicken på vägen!</div></div>
+
+    <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;margin:18px 0 6px">👩‍👧 För fru &amp; dotter</div>
+    <div class="game"><div class="who">✏️ KREATIVT · 8 ÅR</div><div class="name">Resejournal</div><div class="d">Eget "resepass"-häfte. Rita 1 minne + skriv 1–2 meningar per dag. Klistra in menyer, biljetter, löv. Eget konstverk i slutet!</div></div>
+    <div class="game"><div class="who">🗺️ GEOGRAFI</div><div class="name">Landet på kartan</div><div class="d">Mamma håller karta. Dottern pekar var bilen är just nu och "navigerar" med fingret. Lär sig riktig geografi.</div></div>
+    <div class="game"><div class="who">🎵 MUSIK</div><div class="name">Landets låtar</div><div class="d">Byt Spotify-lista vid varje gräns! ABBA i Sverige, schlager i Tyskland, opera i Österrike, italiano i Italien, flamenco i Spanien. Gissa landet!</div></div>
+    <div class="game"><div class="who">🧩 LOGIK</div><div class="name">20 frågor – Europaversion</div><div class="d">Tänk på ett land, en stad eller ett monument ni besökt. Ja/nej-frågor. Repetera reseminnen!</div></div>
+    <div class="game"><div class="who">📷 FOTO</div><div class="name">Fotografuppdraget</div><div class="d">5 dagliga uppdrag: "ett djur", "en dörr", "något rött", "ett leende", "landskap". Recensionsmöte på kvällen!</div></div>
+    <div class="game"><div class="who">🍽️ SMAKER</div><div class="name">Matvalet</div><div class="d">I varje land väljer dottern en lokal rätt: 🇩🇪 Brezel, 🇮🇹 ny gelato-smak, 🇫🇷 croissant, 🇪🇸 churros! Fotas in i resejournalen.</div></div>
+
+    <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;margin:18px 0 6px">🌙 Kvällar vid vanen</div>
+    <div class="game"><div class="who">⭐ KVÄLL</div><div class="name">Dagens topp 3</div><div class="d">Alla tre berättar bästa minne, roligaste stunden &amp; godaste maten. Skapar samtal och stärker minnen.</div></div>
+    <div class="game"><div class="who">🔭 STJÄRNOR</div><div class="name">Himlajakt</div><div class="d">På mörka platser (Ebrodelta, Alperna): filtar ut, appen SkySafari pekar ut stjärnbilder. Hitta Karlsvagnen, Orion + ev. stjärnskur!</div></div>
+    <div class="tip">💡 Köp ett "resepris-paket" hemma — små paketerade presenter som delas ut vid milstenar (första landet, Alperna, Medelhavet, hemkomst). Bygger spänning hela resan!</div>
+  </div>
+
+  <!-- ============== COSTS ============== -->
+  <div class="panel" id="p-costs">
+    <h2 class="section">💶 Uppskattade kostnader (3 pers · 22 dagar)</h2>
+
+    <div class="card"><div class="label">🛣️ Tullar &amp; avgifter</div>
+      <div class="row"><span>Öresundsbron tur&amp;retur</span><span class="a">~85 €</span></div>
+      <div class="row"><span>Vinjett Österrike 10 dagar</span><span class="a">~9,90 €</span></div>
+      <div class="row"><span>Brennerpasset (A13)</span><span class="a">~13 €</span></div>
+      <div class="row"><span>Italienska motorvägar</span><span class="a">~30–40 €</span></div>
+      <div class="row"><span>Franska motorvägar</span><span class="a">~50–65 €</span></div>
+      <div class="row"><span>Spanien (AP-7 fri sedan 2020!)</span><span class="a">0 €</span></div>
+      <div class="row"><span><strong>Totalt</strong></span><span class="a"><strong>~230–260 €</strong></span></div>
+    </div>
+    <div class="card"><div class="label">⛽ Bränsle</div>
+      <div class="item">~4500–5000 km tur&amp;retur</div>
+      <div class="item">~12–15 l/10 km → 600–700 l diesel</div>
+      <div class="item">Dieselpris ~1,50–1,80 €/l</div>
+      <div class="row"><span><strong>Totalt</strong></span><span class="a"><strong>~900–1200 €</strong></span></div>
+    </div>
+    <div class="card"><div class="label">🛏️ Sovplatser (22 nätter)</div>
+      <div class="item">~12 gratis P4N · 0 €</div>
+      <div class="item">~8 Stellplätze 5–10 €/natt → ~60–80 €</div>
+      <div class="item">~2 budget-camping 20–25 € → ~45 €</div>
+      <div class="row"><span><strong>Totalt</strong></span><span class="a"><strong>~100–130 €</strong></span></div>
+    </div>
+    <div class="card"><div class="label">🍽️ Mat &amp; upplevelser</div>
+      <div class="item">Mataffär: ~30–40 €/dag → ~660 €</div>
+      <div class="item">Restaurang 1×/dag: ~40–60 € → ~880 €</div>
+      <div class="item">Entréer (akvarier, tåg, zoo): ~80–120 €</div>
+      <div class="row"><span><strong>Totalt</strong></span><span class="a"><strong>~1600–1800 €</strong></span></div>
+    </div>
+    <div class="total">
+      <div style="font-size:13px;text-transform:uppercase;letter-spacing:.08em">🏆 Totalt hela resan</div>
+      <div style="font-size:28px;font-family:'Fredoka',sans-serif;margin-top:4px">~3 100–3 500 € (~35 000 kr)</div>
+      <div style="font-size:13px;margin-top:4px;opacity:.85">≈ 50–55 € per person &amp; dag</div>
+    </div>
+  </div>
+
+  <footer>
+    Skapad med ❤️ för familjens Europaresa 2025 · Tryck <strong>✏️ Redigeringsläge</strong> uppe till höger för att ändra texter och lägga till egna tips · <strong>📥 Exportera HTML</strong> laddar ner din uppdaterade version att lägga upp på GitHub.
+  </footer>
+</div>
+
+<script type="module">
+/* ====== TABS ====== */
+document.getElementById('tabs').addEventListener('click', e=>{
+  const b = e.target.closest('.tab'); if(!b) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('p-'+b.dataset.p).classList.add('active');
+  window.scrollTo({top: document.querySelector('.tabs').offsetTop - 10, behavior:'smooth'});
+});
+
+/* ====== PACKLISTA ====== */
+const lists = {
+  van:[
+    "🪣 Reservdunk vatten 20 l","🛢️ Extra motorolja &amp; kylarvätska","⚠️ Reflekterande varningstriangel (krav i ES/FR/IT)",
+    "🦺 Gul reflexväst per person (krav i ES &amp; FR!)","🔧 Verktygslåda (skiftnyckel, tejp, säkringar)","🪢 Bogserlina",
+    "💨 Tryckluftspump 12V","⛱️ Markis / solskydd","🦟 Insektsnät till fönster (LIVSVIKTIGT!)","☀️ Solavskärmning framruta",
+    "🔦 Pannlampa x3","🔌 Elförlängning 10 m","💧 Vattenslangsanslutning"
+  ],
+  klader:[
+    "👕 Lätta sommarkläder x5/person","👖 1 långbyxa var","🧥 Lätt jacka var (Alperna!)","🩱 Badkläder x2/person",
+    "🥾 Stövlar/vandringsskor","🩴 Flipflops/sandaler","🧢 Solhatt till barnet","🌧️ Regnponcho","🩲 Underkläder x7/person"
+  ],
+  kok:[
+    "🔥 Gaskök 2-plattor + gaskasetter","🍳 Stekpanna non-stick","🥘 Stor kastrull","☕ Moka-kanna / kaffepress",
+    "🍽️ Tallrikar, muggar, bestick x4 (melamin)","🪵 Skärbräda","🔪 Knivar x2 i skyddsfodral",
+    "🧽 Diskbalja + diskmedel + svamp","🧺 Bordsduk","🧊 Kylväska för inköp","🍵 Termos 1 l"
+  ],
+  barn:[
+    "📓 Resejournal + pennor","📷 Kamera / gammal telefon","🎯 Resebingo-kort","🧸 Favoritgosedjur",
+    "🎧 Ljudböcker offline","🖍️ Färgläggningsbok + klistermärken","🃏 Uno, Kvartett, Dobble",
+    "🎒 Hennes egen lilla ryggsäck","🤿 Snorkelmask &amp; badleksaker","👟 Vattenskor (klippstränder)"
+  ],
+  halsa:[
+    "🩹 Försthjälpskit","💊 Paracetamol &amp; Ibuprofen (barn+vuxen)","🤧 Antihistamin (tablett+kräm)",
+    "🧴 Solkräm SPF 50+ x3","🌿 Aloe vera / eftersol","🦟 Myggspray DEET","💩 Diarrémedicin + saltlösning",
+    "🤢 Åksjuke-plåster","🌡️ Termometer","🆔 EHIC-kort x3","📞 Reseförsäkringsnummer sparat"
+  ],
+  dok:[
+    "🛂 Pass x3 (giltiga ≥ 6 mån)","🚗 Körkort","📋 Registreringsbevis","🟢 Grönt kort (försäkring)",
+    "🆔 EHIC-kort x3","🛟 Vägassistans-nummer","📷 Kopia på pass (separat)","📄 Reseförsäkringshandlingar","🔌 Laddkabel GPS/telefon"
+  ]
+};
+/* ====== FIREBASE (auto-sync via molnet) ====== */
+let packState = {};
+let notesStore = {};
+let editsStore = {};
+let remoteApplying = false;
+let saveTimer = null;
+
+function flash(msg){
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1F2A44;color:#fff;padding:12px 20px;border-radius:999px;font-weight:700;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);font-family:Fredoka,sans-serif';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),1800);
+}
+
+function buildPack(){
+  let total=0;
+  for(const k of Object.keys(lists)){
+    const el = document.getElementById('list-'+k); if(!el) continue;
+    el.innerHTML='';
+    lists[k].forEach((txt,i)=>{
+      const id = k+'-'+i;
+      const wrap = document.createElement('div'); wrap.className='check';
+      const cb = document.createElement('input'); cb.type='checkbox'; cb.id=id;
+      if(packState[id]) cb.checked=true;
+      const lbl = document.createElement('label'); lbl.htmlFor=id; lbl.innerHTML=txt;
+      cb.addEventListener('change',()=>{packState[id]=cb.checked;scheduleSave();updateProg();});
+      wrap.append(cb,lbl); el.appendChild(wrap); total++;
+    });
+  }
+  window._pTot=total; updateProg();
+}
+function updateProg(){
+  const total=window._pTot||0;
+  const done = Object.values(packState).filter(Boolean).length;
+  const fill = document.getElementById('packfill'); if(fill) fill.style.width = total? (done/total*100)+'%' : '0%';
+  const cnt = document.getElementById('packcount'); if(cnt) cnt.textContent = done+' / '+total+' packade';
+}
+
+/* Ge varje redigerbart element ett stabilt key */
+function assignEditKeys(){
+  document.querySelectorAll('.notes').forEach(n=>{ n.dataset.editKey = 'note:'+n.dataset.note; });
+  const eds = document.querySelectorAll('h1,h2,h3,p,.item,.day-title,.day-sub,.sleep .n,.sleep .i,.tip,.info,.chip,.label,.game .name,.game .d,.game .who');
+  eds.forEach((el,i)=>{ if(!el.dataset.editKey) el.dataset.editKey = 'el:'+i; });
+}
+
+function applyStoredContent(){
+  remoteApplying = true;
+  document.querySelectorAll('.notes').forEach(n=>{
+    const v = notesStore[n.dataset.note];
+    if(v!=null) n.innerHTML = v;
+  });
+  document.querySelectorAll('[data-edit-key]').forEach(el=>{
+    if(el.classList.contains('notes')) return;
+    const v = editsStore[el.dataset.editKey];
+    if(v!=null && el.innerHTML !== v) el.innerHTML = v;
+  });
+  remoteApplying = false;
+}
+
+function bindEditableListeners(){
+  document.querySelectorAll('.notes').forEach(n=>{
+    n.addEventListener('input',()=>{
+      if(remoteApplying) return;
+      notesStore[n.dataset.note]=n.innerHTML;
+      scheduleSave();
+    });
+  });
+  document.querySelectorAll('[data-edit-key]').forEach(el=>{
+    if(el.classList.contains('notes')) return;
+    el.addEventListener('input',()=>{
+      if(remoteApplying) return;
+      editsStore[el.dataset.editKey] = el.innerHTML;
+      scheduleSave();
+    });
+  });
+}
+
+/* ====== EDIT MODE ====== */
+function setEdit(on){
+  document.body.classList.toggle('edit',on);
+  document.querySelectorAll('h1,h2,h3,p,.item,.day-title,.day-sub,.sleep .n,.sleep .i,.tip,.info,.chip,.label,.game .name,.game .d,.game .who,.notes')
+    .forEach(el=>el.setAttribute('contenteditable', on?'true':'false'));
+  const b = document.getElementById('editBtn');
+  b.classList.toggle('on',on);
+  b.textContent = on?'✅ Klar med redigering':'✏️ Redigeringsläge';
+}
+document.getElementById('editBtn').addEventListener('click',()=>setEdit(!document.body.classList.contains('edit')));
+
+/* Behåll knapparna men koppla till moln-funktioner */
+document.getElementById('saveBtn').addEventListener('click',()=>{ saveNow().then(()=>flash('☁️ Sparat i molnet!')); });
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const clone = document.documentElement.cloneNode(true);
+  clone.querySelectorAll('[contenteditable]').forEach(e=>e.setAttribute('contenteditable','false'));
+  clone.querySelector('body')?.classList.remove('edit');
+  const html = '<!doctype html>\n<html lang="sv">\n'+clone.innerHTML+'\n</html>';
+  const blob = new Blob([html],{type:'text/html'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'index.html'; a.click();
+  flash('📥 Backup nedladdad!');
+});
+document.getElementById('resetBtn').addEventListener('click',async ()=>{
+  if(confirm('Återställa alla redigeringar, anteckningar och packlista (även i molnet)?')){
+    packState={}; notesStore={}; editsStore={};
+    await saveNow();
+    location.reload();
+  }
+});
+
+/* ====== Init utan moln först (så sidan funkar även offline) ====== */
+assignEditKeys();
+buildPack();
+bindEditableListeners();
+setEdit(false);
+
+/* ====== FIREBASE init + realtime sync ====== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAd9_JejnvfW7HIyL5dB_k1933yLQ_81e8",
+  authDomain: "if-arbetsportal.firebaseapp.com",
+  projectId: "if-arbetsportal",
+  storageBucket: "if-arbetsportal.firebasestorage.app",
+  messagingSenderId: "1090452573649",
+  appId: "1:1090452573649:web:42b3378f707080fc0b64f0"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const tripRef = doc(db, "trips", "europa2025");
+
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveNow, 700);
+}
+async function saveNow(){
+  try{
+    await setDoc(tripRef, {
+      pack: packState,
+      notes: notesStore,
+      edits: editsStore,
+      updatedAt: Date.now()
+    }, { merge: true });
+  }catch(e){
+    console.error('Spara misslyckades', e);
+    flash('⚠️ Kunde inte spara i molnet');
+  }
+}
+
+onSnapshot(tripRef, (snap)=>{
+  if(!snap.exists()) return;
+  const data = snap.data();
+  packState = data.pack || {};
+  notesStore = data.notes || {};
+  editsStore = data.edits || {};
+  applyStoredContent();
+  // rebuild pack to reflect new checked state
+  buildPack();
+  bindEditableListeners();
+}, (err)=>{
+  console.error('Sync-fel', err);
+  flash('⚠️ Ingen anslutning till molnet');
+});
+</script>
+</body>
+</html>
